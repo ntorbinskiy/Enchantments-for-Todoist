@@ -1,19 +1,21 @@
 {
-    "compilerOptions": {
-        "strict": true,
-        "module": "commonjs",
-        "target": "es5",
-        "esModuleInterop": true,
-        "noImplicitAny": true,
-        "sourceMap": false,
-        "outDir": "dist/js",
-        "noEmitOnError": true,
-        "typeRoots": ["node_modules/@types"],
-        "baseUrl": ".",
-        "paths": {
-            "*": ["*", "src/*"]
-        },
-        "allowJs": true,
-        "lib": ["es2015", "dom"]
-    }
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "target": "ES5",
+    "lib": ["es2021", "dom"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
