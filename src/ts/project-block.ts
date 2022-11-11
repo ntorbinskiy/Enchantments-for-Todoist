@@ -93,14 +93,9 @@ const linkLogic = () => {
       });
 
       button.addEventListener("click", () => {
-        const windowOpen = window.open(
-          `https://todoist.com/app/task/${item.dataset.itemId}`,
-          "_blank"
-        );
-
-        if (windowOpen) {
-          windowOpen.focus();
-        }
+        window
+          .open(`https://todoist.com/app/task/${item.dataset.itemId}`, "_blank")
+          ?.focus();
       });
     })
   );
@@ -117,21 +112,19 @@ const connectFonts = () => {
   document.head.appendChild(link);
 };
 
-const countTotalPoints = (namesOfTasks: NodeListOf<Element>): number => {
+const getTotalPoints = (namesOfTasks: NodeListOf<Element>): number => {
   const regexForTotalPoints = /^.*\[(?<score>\d+)\]\s*.*$/;
-
   return Array.from(namesOfTasks)
     .map((nameOfTaskItem) => {
-      const scoreText =
-        nameOfTaskItem.textContent ??
-        " ".replaceAll("\n", " ").match(regexForTotalPoints)?.groups?.["score"];
-
+      const scoreText = nameOfTaskItem.textContent
+        ?.replaceAll("\n", " ")
+        .match(regexForTotalPoints)?.groups?.["score"];
       return scoreText ? parseInt(scoreText) : 0;
     })
     .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 };
 
-const totalPointsStyle = (
+const setupTotalPointsStyles = (
   headerOfProject: Element,
   totalPointsElement: HTMLDivElement,
   totalPointsSpan: HTMLSpanElement,
@@ -186,26 +179,24 @@ const totalPointsLogic = () => {
     return;
   }
 
-  totalPointsStyle(
+  setupTotalPointsStyles(
     headerOfProject,
     totalPointsElement,
     totalPointsSpan,
     totalPointsParent,
-    countTotalPoints(namesOfTasks)
+    getTotalPoints(namesOfTasks)
   );
 
   totalPointsParent.append(totalPointsElement, totalPointsSpan);
 
+  const totalPoints = headerOfProject.querySelector(totalPointsSpanId);
+
   if (
     headerOfProject.querySelector(totalPointsId) &&
-    headerOfProject.querySelector(totalPointsSpanId) instanceof Element &&
-    headerOfProject.querySelector(totalPointsSpanId)?.textContent !==
-      `${countTotalPoints(namesOfTasks)}`
+    totalPoints instanceof Element &&
+    totalPoints?.textContent !== `${getTotalPoints(namesOfTasks)}`
   ) {
-    headerOfProject.querySelector(
-      totalPointsSpanId
-    )!.textContent = `${countTotalPoints(namesOfTasks)}`;
-    //⬆️ I hate using of it, but in this case that was necessary(I'm talking about non-null assertion operator )
+    totalPoints.textContent = `${getTotalPoints(namesOfTasks)}`;
   } else if (headerOfProject.querySelector(totalPointsId)) {
     return;
   } else {

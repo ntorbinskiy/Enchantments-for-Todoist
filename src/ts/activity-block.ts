@@ -1,8 +1,5 @@
-const isCompleteTask = (taskElement: HTMLElement): boolean =>
-  taskElement.dataset.svgsPath === "sm1/notification_completed.svg";
-
-const isIconCompleted = (element: HTMLElement) =>
-  element.dataset.svgsPath !== "sm1/notification_completed.svg";
+const isIconEqCompleted = (svgIconPath: string): boolean =>
+  svgIconPath === "sm1/notification_completed.svg";
 
 const connectFonts = () => {
   const link = document.createElement("link");
@@ -21,24 +18,24 @@ const getTaskScore = (name: string, regex: RegExp): number | undefined => {
 };
 
 const getTasksScores = (
-  tasks: Element[],
-  getItemScore: (name: string, regex: RegExp) => number | undefined,
+  tasksArray: Element[],
+  getTaskScore: (name: string, regex: RegExp) => number | undefined,
   regexForScoreAndPoints: RegExp
 ) => {
-  return tasks.map((item) => {
-    return Array.from(item.childNodes)
+  return tasksArray.map((tasks) => {
+    return Array.from(tasks.childNodes)
       .map((task) => {
         const svgPath = task.childNodes[0]?.childNodes[1]?.childNodes[0];
         if (
-          svgPath instanceof HTMLElement &&
-          isCompleteTask(svgPath) &&
+          svgPath instanceof SVGElement &&
+          isIconEqCompleted(svgPath.dataset.svgsPath!) &&
           task instanceof HTMLElement
         ) {
-          const itemScore = getItemScore(
+          const taskScore = getTaskScore(
             task.innerText,
             regexForScoreAndPoints
           );
-          return itemScore ?? 0;
+          return taskScore ?? 0;
         } else {
           return 0;
         }
@@ -103,33 +100,33 @@ const pastDivToPage = (
 const checkIsTaskCorrect = (regexForScoreAndPoints: RegExp) => {
   const icons = document.getElementsByClassName("avatar_event_icon");
 
-  Array.from(icons).map((element) => {
-    const elementParent = element.parentElement?.parentElement;
-    const pathForSvgIconCheck = element.children[0];
+  Array.from(icons).map((icon) => {
+    const parentElement = icon.parentElement?.parentElement;
 
-    if (!(elementParent instanceof HTMLElement)) {
+    if (!(parentElement instanceof HTMLElement)) {
       return;
     }
-    const listItem = elementParent.childNodes;
-    const span = elementParent.childNodes[1]?.childNodes[1];
 
-    const taskName =
-      elementParent.childNodes[1]?.childNodes[0]?.childNodes[2]?.childNodes[0]
-        ?.childNodes[0]?.textContent ?? " ";
-
-    const score = getTaskScore(taskName, regexForScoreAndPoints);
+    const pathForSvgIconCheck = icon.childNodes[0];
 
     if (
-      pathForSvgIconCheck instanceof HTMLElement &&
-      isIconCompleted(pathForSvgIconCheck)
+      pathForSvgIconCheck instanceof SVGElement &&
+      !isIconEqCompleted(pathForSvgIconCheck.dataset.svgsPath ?? " ")
     ) {
       return;
     }
 
-    //time of task
+    const listItem = parentElement.childNodes;
+    const span = parentElement.childNodes[1]?.childNodes[1];
+
+    const taskName =
+      parentElement.childNodes[1]?.childNodes[0]?.childNodes[2]?.childNodes[0]
+        ?.childNodes[0]?.textContent ?? " ";
+
+    const score = getTaskScore(taskName, regexForScoreAndPoints);
 
     if (score === undefined) {
-      elementParent.style.backgroundColor = "rgba(246, 193, 4, 0.11)";
+      parentElement.style.backgroundColor = "rgba(246, 193, 4, 0.11)";
       if (!(span instanceof HTMLElement) || span.id === "noPoints") {
         return;
       }
