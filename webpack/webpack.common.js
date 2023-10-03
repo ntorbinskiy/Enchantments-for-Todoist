@@ -17,7 +17,7 @@ const fileExtensions = [
 
 module.exports = {
   entry: {
-    "../contentScript": path.join(srcDir, "modules", "content-script-root.ts"),
+    "../contentScript": path.join(srcDir, "contentScriptRoot.js"),
   },
   output: {
     path: path.join(__dirname, "../dist/js"),

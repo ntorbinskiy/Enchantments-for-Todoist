@@ -1,9 +1,9 @@
 import mutationObserver from "./mutationObserver";
 import runApp from "./modules/runApp";
-import "../icons/icon128.png";
-import "../icons/icon48.png";
-import "../icons/icon32.png";
-import "../icons/icon16.png";
+// import "../icons/icon128.png";
+// import "../icons/icon48.png";
+// import "../icons/icon32.png";
+// import "../public/icons/";
 
 const bootstrapApp = () => {
   runApp();

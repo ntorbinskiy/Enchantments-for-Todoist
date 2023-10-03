@@ -1,7 +1,7 @@
 {
   "name": "Todoist extension",
   "description": "Todoist extension",
-  "version": "1.2",
+  "version": "2.1",
   "content_scripts": [
     {
       "matches": ["https://todoist.com/app/*"],

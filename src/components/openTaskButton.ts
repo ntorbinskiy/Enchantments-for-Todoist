@@ -1,4 +1,16 @@
-const setupSvg = (iconSvg, iconRect, iconLine, iconPath) => {
+interface setupSvgArgs {
+  readonly iconSvg: SVGSVGElement;
+  readonly iconRect: SVGRectElement;
+  readonly iconLine: SVGLineElement;
+  readonly iconPath: SVGPathElement;
+}
+
+const setupSvg = ({
+  iconSvg,
+  iconRect,
+  iconLine,
+  iconPath,
+}: setupSvgArgs): SVGSVGElement => {
   iconSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
   iconSvg.setAttribute("x", "0px");
   iconSvg.setAttribute("y", "0px");
@@ -32,14 +44,14 @@ const setupSvg = (iconSvg, iconRect, iconLine, iconPath) => {
   return iconSvg;
 };
 
-const setButtonStyles = (button) => {
+const setButtonStyles = (button: HTMLButtonElement): void => {
   button.className = "button-href";
   button.style.height = "24px";
   button.style.width = "24px";
   button.style.marginTop = "-1px";
 };
 
-const createOpenTaskButton = (taskId) => {
+const createOpenTaskButton = (taskId: string): HTMLButtonElement => {
   const button = document.createElement("button");
   const svgPath = "http://www.w3.org/2000/svg";
 
@@ -48,12 +60,24 @@ const createOpenTaskButton = (taskId) => {
   const iconLine = document.createElementNS(svgPath, "line");
   const iconPath = document.createElementNS(svgPath, "path");
 
-  button.appendChild(setupSvg(iconSvg, iconRect, iconLine, iconPath));
+  const setUpSvgArgs = {
+    iconSvg,
+    iconRect,
+    iconLine,
+    iconPath,
+  };
+
+  button.appendChild(setupSvg(setUpSvgArgs));
 
   setButtonStyles(button);
 
   button.addEventListener("click", () => {
-    window.open(`https://todoist.com/app/task/${taskId}`, "_blank").focus();
+    const taskWindowOpening = window.open(
+      `https://todoist.com/app/task/${taskId}`,
+      "_blank"
+    );
+
+    if (taskWindowOpening) taskWindowOpening.focus();
   });
 
   return button;

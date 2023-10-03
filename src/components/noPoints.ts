@@ -1,7 +1,22 @@
 const NO_POINTS = "NO_POINTS";
 const limitOfCharactersPerTask = 86;
 
-const setStylesForNoPoints = ({ taskItem, taskTime, taskName, noPoints }) => {
+interface createNoPointsArgs {
+  readonly taskItem: HTMLElement;
+  readonly taskTime: Element;
+  readonly taskName: string;
+}
+
+interface SetStylesForNoPointsArgs extends createNoPointsArgs {
+  readonly noPoints: HTMLSpanElement;
+}
+
+const setStylesForNoPoints = ({
+  taskItem,
+  taskTime,
+  taskName,
+  noPoints,
+}: SetStylesForNoPointsArgs): void => {
   taskItem.style.backgroundColor = "rgba(246, 193, 4, 0.11)";
 
   noPoints.innerHTML = "No points entered for this task";
@@ -13,7 +28,7 @@ const setStylesForNoPoints = ({ taskItem, taskTime, taskName, noPoints }) => {
   }
 
   noPoints.style.fontSize = "11px";
-  noPoints.style.fontWeight = 500;
+  noPoints.style.fontWeight = "500";
   noPoints.style.fontFamily = "inherit";
   noPoints.style.color = "#BC760D";
   noPoints.style.position = "relative";
@@ -21,11 +36,15 @@ const setStylesForNoPoints = ({ taskItem, taskTime, taskName, noPoints }) => {
   noPoints.style.left = "0px";
 };
 
-export const findNoPointsElement = (taskItem) => {
+export const findNoPointsElement = (taskItem: HTMLElement): Element | null => {
   return taskItem.querySelector(`#${NO_POINTS}`);
 };
 
-export const createNoPoints = ({ taskItem, taskTime, taskName }) => {
+export const createNoPoints = ({
+  taskItem,
+  taskTime,
+  taskName,
+}: createNoPointsArgs): HTMLSpanElement => {
   const noPoints = document.createElement("span");
 
   const stylesForNoPointsOptions = {
