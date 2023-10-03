@@ -6,7 +6,7 @@
     {
       "matches": ["https://todoist.com/app/*"],
       "runat": "documet-idle",
-      "js": ["contentScript.js"]
+      "js": ["content.bundle.js"]
     }
   ],
   "icons": {

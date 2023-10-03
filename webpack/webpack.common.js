@@ -17,7 +17,7 @@ const fileExtensions = [
 
 module.exports = {
   entry: {
-    "../contentScript": path.join(srcDir, "contentScriptRoot.js"),
+    "../contentScript": path.join(srcDir, "contentScriptRoot.ts"),
   },
   output: {
     path: path.join(__dirname, "../dist/js"),
@@ -29,6 +29,19 @@ module.exports = {
         test: /\.ts$/i,
         use: "ts-loader",
         exclude: /node_modules/,
+      },
+      //   {
+      //     exclude: /node_modules/,
+      //     test: new RegExp(".(" + fileExtensions.join("|") + ")$"),
+      //     use: [{ loader: "file-loader?name=[name].[ext]" }],
+      //   },
+      {
+        test: /\.(png)$/i,
+        use: [
+          {
+            loader: "file-loader",
+          },
+        ],
       },
     ],
   },

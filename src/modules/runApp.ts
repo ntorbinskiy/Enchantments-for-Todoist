@@ -1,7 +1,7 @@
 import activityModule from "./activityModule";
 import projectModule from "./projectModule";
 
-const runApp = () => {
+const runApp = (): void => {
   const windowLink = window.location.href;
   const todoistLink = "https://todoist.com/app";
 

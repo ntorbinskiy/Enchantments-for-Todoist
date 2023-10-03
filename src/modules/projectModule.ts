@@ -10,7 +10,7 @@ interface SetPageStylesArgs {
   readonly buttonsGroup: HTMLElement;
   readonly headerOfProject: HTMLElement;
   readonly projectName: HTMLHeadingElement;
-  readonly editProjectNameMode: HTMLElement;
+  readonly editProjectNameMode: Element | null;
 }
 
 const linkLogic = (): void => {
@@ -84,7 +84,7 @@ const setPageStyles = ({
 
   setButtonGroupStyles(buttonsGroup);
 
-  if (editProjectNameMode) {
+  if (editProjectNameMode instanceof HTMLElement) {
     editProjectNameMode.style.gridRow = "span 2";
   } else if (projectName) {
     projectName.style.gridRowStart = "2";
@@ -118,7 +118,6 @@ const totalPointsLogic = (): void => {
 
   if (
     !(buttonsGroup instanceof HTMLElement) ||
-    !(editProjectNameMode instanceof HTMLElement) ||
     !(projectName instanceof HTMLElement)
   ) {
     return;
