@@ -14,7 +14,7 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "target": "ES5",
-    "lib": ["es2021", "dom"],
+    "lib": ["ES2022", "dom"],
     "allowJs": true
   },
   "include": ["src/**/*"],
