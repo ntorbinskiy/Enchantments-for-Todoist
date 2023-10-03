@@ -2,8 +2,6 @@
 
 This is the version of the [getting started](https://developer.chrome.com/docs/extensions/mv3/getstarted/) with typescript and webpack applied.
 
-  
-
 You should change...  
 json files in `/public/_locales/` ( reference: https://developer.chrome.com/docs/webstore/i18n/ )  
 png files in `/public/icons/` ( with the icon that you use )  
@@ -32,11 +30,7 @@ png files in `/public/icons/` ( with the icon that you use )
 }
 ```
 
-  
-
-You should replace the image `/src/assets/black-cat.png` with the images that you use.   
-
-  
+You should replace the image `/src/assets/black-cat.png` with the images that you use.
 
 You should NOT change...
 
@@ -44,7 +38,7 @@ You should NOT change...
 
 ```html
 ...
-    <script src="js/popup.js"></script>
+<script src="js/popup.js"></script>
 ...
 ```
 
@@ -52,17 +46,13 @@ You should NOT change...
 
 ```html
 ...
-    <script src="js/options.js"></script>
+<script src="js/options.js"></script>
 ...
 ```
 
-`js/popup.js` and `js/options.js` are the entry point of the build files  
+`js/popup.js` and `js/options.js` are the entry point of the build files
 
-  
-
-  
-
-## Usage  
+## Usage
 
 ### Install
 
@@ -73,8 +63,6 @@ yarn
 ```shell
 npm install
 ```
-
-
 
 ### Development
 
@@ -88,8 +76,6 @@ npm run watch
 
 and load the `/dist` folder to the chrome browser
 
-
-
 ### Build
 
 ```shell
@@ -102,8 +88,6 @@ npm run build
 
 and zip the `/dist` folder
 
-
-
 ### Remove `/dist` folder
 
 ```shell
@@ -114,25 +98,20 @@ yarn clean
 npm run clean
 ```
 
-  
-
-  
-
 ### Absolute Path
 
 You can import modules by absolute path by setting the root path to `/src`.
 
-ex )  
+ex )
 
- `/src/components/Modal/index.ts`  
-
-```js
-export default function Modal(){};
-```
-
-`/src/pages/Main.ts ` 
+`/src/components/Modal/index.ts`
 
 ```js
-import Modal from 'components/Modal'
+export default function Modal() {}
 ```
 
+`/src/pages/Main.ts `
+
+```js
+import Modal from "components/Modal";
+```
