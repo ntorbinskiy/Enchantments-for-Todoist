@@ -6,12 +6,23 @@ import {
   updateTotalPointsScore,
 } from "../components/totalPoints";
 
-const linkLogic = () => {
+interface SetPageStylesArgs {
+  readonly buttonsGroup: HTMLElement;
+  readonly headerOfProject: HTMLElement;
+  readonly projectName: HTMLHeadingElement;
+  readonly editProjectNameMode: HTMLElement;
+}
+
+const linkLogic = (): void => {
   const listOfItems = document.querySelectorAll(
     "li[class='task_list_item task_list_item--project_hidden']"
   );
 
   nodeToArray(listOfItems).map((task) => {
+    if (!(task instanceof HTMLElement)) {
+      return;
+    }
+
     const buttonLinkParent = task.querySelector(
       ".task_list_item__actions--active"
     );
@@ -22,7 +33,9 @@ const linkLogic = () => {
 
     task.addEventListener("mouseenter", () => {
       if (!buttonLinkParent.querySelector("button.button-href")) {
-        const openTaskButton = createOpenTaskButton(task.dataset.itemId);
+        const openTaskButton = createOpenTaskButton(
+          task.dataset.itemId ?? "error"
+        );
 
         buttonLinkParent.prepend(openTaskButton);
       }
@@ -30,7 +43,7 @@ const linkLogic = () => {
   });
 };
 
-const getTotalPoints = (namesOfTasks) => {
+const getTotalPoints = (namesOfTasks: NodeListOf<Element>): number => {
   const regexForTotalPoints = /^.*\[(?<score>\d+)\]\s*.*$/;
   const modalDialog = document.querySelector("div[role=dialog]");
 
@@ -39,16 +52,17 @@ const getTotalPoints = (namesOfTasks) => {
       return modalDialog === null || !modalDialog.contains(task);
     })
     .map((nameOfTaskItem) => {
-      const scoreText = nameOfTaskItem.textContent
-        .replaceAll("\n", " ")
-        .match(regexForTotalPoints)?.groups?.["score"];
+      const taskTextContent = nameOfTaskItem.textContent ?? "";
+      const scoreText =
+        taskTextContent.replaceAll("\n", " ").match(regexForTotalPoints)
+          ?.groups?.["score"] ?? "";
 
       return parseInt(scoreText) || 0;
     })
     .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 };
 
-const setHeaderOfProjectStyles = (headerOfProject) => {
+const setHeaderOfProjectStyles = (headerOfProject: HTMLElement): void => {
   headerOfProject.style.display = "grid";
   headerOfProject.style.gridTemplateRows = "0fr 2fr";
   headerOfProject.style.gridTemplateColumns = "auto auto";
@@ -56,8 +70,8 @@ const setHeaderOfProjectStyles = (headerOfProject) => {
   headerOfProject.style.gap = "21px";
 };
 
-const setButtonGroupStyles = (buttonsGroup) => {
-  buttonsGroup.style.gridColumnStart = 2;
+const setButtonGroupStyles = (buttonsGroup: HTMLElement): void => {
+  buttonsGroup.style.gridColumnStart = "2";
 };
 
 const setPageStyles = ({
@@ -65,7 +79,7 @@ const setPageStyles = ({
   headerOfProject,
   projectName,
   editProjectNameMode,
-}) => {
+}: SetPageStylesArgs): void => {
   setHeaderOfProjectStyles(headerOfProject);
 
   setButtonGroupStyles(buttonsGroup);
@@ -73,7 +87,7 @@ const setPageStyles = ({
   if (editProjectNameMode) {
     editProjectNameMode.style.gridRow = "span 2";
   } else if (projectName) {
-    projectName.style.gridRowStart = 2;
+    projectName.style.gridRowStart = "2";
   }
 
   if (
@@ -81,14 +95,19 @@ const setPageStyles = ({
     projectName.parentElement &&
     projectName.parentElement !== headerOfProject
   ) {
-    projectName.parentElement.style.gridRowStart = 2;
+    projectName.parentElement.style.gridRowStart = "2";
     headerOfProject.style.alignItems = "center";
   }
 };
 
-const totalPointsLogic = () => {
+const totalPointsLogic = (): void => {
   const namesOfTasks = document.querySelectorAll("div.task_content");
   const headerOfProject = document.querySelector("div.view_header__content");
+
+  if (!(headerOfProject instanceof HTMLElement)) {
+    return;
+  }
+
   const buttonsGroup = headerOfProject.querySelector(
     "div.view_header__actions"
   );
@@ -96,6 +115,14 @@ const totalPointsLogic = () => {
     "[data-testid=view_header__form]"
   );
   const projectName = document.querySelector("h1");
+
+  if (
+    !(buttonsGroup instanceof HTMLElement) ||
+    !(editProjectNameMode instanceof HTMLElement) ||
+    !(projectName instanceof HTMLElement)
+  ) {
+    return;
+  }
 
   const totalPointsOptions = {
     buttonsGroup,
@@ -119,7 +146,7 @@ const totalPointsLogic = () => {
   updateTotalPointsScore(totalPointsElement, totalPointsScore);
 };
 
-const projectModule = () => {
+const projectModule = (): void => {
   linkLogic();
   totalPointsLogic();
 };

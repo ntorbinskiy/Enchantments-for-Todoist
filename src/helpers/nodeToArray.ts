@@ -1,6 +1,6 @@
 const nodeToArray = (
-  node: NodeListOf<Element | ChildNode> | HTMLCollectionOf<Element>
-): Element[] | ChildNode[] => {
+  node: NodeListOf<HTMLElement | ChildNode> | HTMLCollectionOf<Element>
+): HTMLElement[] | ChildNode[] => {
   return Array.from(node);
 };
 
