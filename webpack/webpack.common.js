@@ -30,11 +30,6 @@ module.exports = {
         use: "ts-loader",
         exclude: /node_modules/,
       },
-      //   {
-      //     exclude: /node_modules/,
-      //     test: new RegExp(".(" + fileExtensions.join("|") + ")$"),
-      //     use: [{ loader: "file-loader?name=[name].[ext]" }],
-      //   },
       {
         test: /\.(png)$/i,
         use: [
