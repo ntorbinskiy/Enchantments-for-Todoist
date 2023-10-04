@@ -1,6 +1,3 @@
-const NO_POINTS = "NO_POINTS";
-const limitOfCharactersPerTask = 86;
-
 interface createNoPointsArgs {
   readonly taskItem: HTMLElement;
   readonly taskTime: Element;
@@ -10,6 +7,9 @@ interface createNoPointsArgs {
 interface SetStylesForNoPointsArgs extends createNoPointsArgs {
   readonly noPoints: HTMLSpanElement;
 }
+
+const NO_POINTS = "NO_POINTS";
+const limitOfCharactersPerTask = 86;
 
 const setStylesForNoPoints = ({
   taskItem,
