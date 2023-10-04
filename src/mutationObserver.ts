@@ -8,7 +8,7 @@ const config = {
 const callback = (
   mutationList: MutationRecord[],
   _observer: MutationObserver
-) => {
+): void => {
   // ⬆️ the second arg is required
   for (const mutation of mutationList) {
     if (mutation) {
