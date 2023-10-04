@@ -2,25 +2,12 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const srcDir = path.join(__dirname, "..", "src");
 
-const fileExtensions = [
-  "jpg",
-  "jpeg",
-  "png",
-  "gif",
-  "eot",
-  "otf",
-  "svg",
-  "ttf",
-  "woff",
-  "woff2",
-];
-
 module.exports = {
   entry: {
     "../contentScript": path.join(srcDir, "contentScriptRoot.ts"),
   },
   output: {
-    path: path.join(__dirname, "../dist/js"),
+    path: path.join(__dirname, "../dist/icons"),
     filename: "[name].js",
   },
   module: {
@@ -32,11 +19,7 @@ module.exports = {
       },
       {
         test: /\.(png)$/i,
-        use: [
-          {
-            loader: "file-loader",
-          },
-        ],
+        use: "file-loader",
       },
     ],
   },
