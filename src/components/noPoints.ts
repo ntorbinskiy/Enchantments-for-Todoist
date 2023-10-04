@@ -1,10 +1,10 @@
-interface createNoPointsArgs {
+interface CreateNoPointsArgs {
   readonly taskItem: HTMLElement;
   readonly taskTime: Element;
   readonly taskName: string;
 }
 
-interface SetStylesForNoPointsArgs extends createNoPointsArgs {
+interface SetStylesForNoPointsArgs extends CreateNoPointsArgs {
   readonly noPoints: HTMLSpanElement;
 }
 
@@ -44,7 +44,7 @@ export const createNoPoints = ({
   taskItem,
   taskTime,
   taskName,
-}: createNoPointsArgs): HTMLSpanElement => {
+}: CreateNoPointsArgs): HTMLSpanElement => {
   const noPoints = document.createElement("span");
 
   const stylesForNoPointsOptions = {

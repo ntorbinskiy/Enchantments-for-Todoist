@@ -4,6 +4,10 @@ import {
   findScoreBlockElement,
   updateScore,
 } from "../components/scoreBlock";
+import {
+  createUnknownEstimates,
+  findUnknownEstimatesElement,
+} from "../components/unknownEstimates";
 import nodeToArray from "../helpers/nodeToArray";
 
 const isTaskCompleted = (svgPath: string): boolean => {
@@ -12,7 +16,19 @@ const isTaskCompleted = (svgPath: string): boolean => {
   return svgPath === completedImagePath;
 };
 
-const getItemScore = (name: string, regex: RegExp): number | undefined => {
+const isTaskAssigned = (svgPath: string): boolean => {
+  const assignedImagePath = "sm1/notification_assigned.svg";
+
+  return svgPath === assignedImagePath;
+};
+const getItemScore = (
+  name: string,
+  regex: RegExp
+): number | undefined | null => {
+  if (name.replaceAll("\n", " ").match(/\[\.\.\.\]|\[\*\]$/)) {
+    return null;
+  }
+
   const scoreText =
     name.replaceAll("\n", " ").match(regex)?.groups?.["score"] ?? "";
 
@@ -119,25 +135,33 @@ const isTaskCorrect = (regexForScoreAndPoints: RegExp) => {
     }
 
     const svgPath = svgIcon.dataset.svgsPath ?? "";
+    const taskName = taskNameItem.textContent ?? "";
+
+    const score = getItemScore(taskName, regexForScoreAndPoints);
+
+    const alertOptions = {
+      taskItem,
+      taskTime,
+      taskName,
+    };
+
+    if (isTaskAssigned(svgPath)) {
+      const unknownEstimatesElement = findUnknownEstimatesElement(taskItem);
+      if (!unknownEstimatesElement && score === null) {
+        const unknownEstimates = createUnknownEstimates(alertOptions);
+
+        taskText.after(unknownEstimates);
+      }
+    }
 
     if (!isTaskCompleted(svgPath)) {
       return;
     }
 
-    const taskName = taskNameItem.textContent ?? "";
-
-    const score = getItemScore(taskName, regexForScoreAndPoints);
-
     const noPointsElement = findNoPointsElement(taskItem);
 
     if (!noPointsElement && score === undefined) {
-      const noPointsOptions = {
-        taskItem,
-        taskTime,
-        taskName,
-      };
-
-      const noPoints = createNoPoints(noPointsOptions);
+      const noPoints = createNoPoints(alertOptions);
 
       taskText.after(noPoints);
     }
@@ -155,7 +179,7 @@ const activityModule = (): void => {
       return;
     }
 
-    return postCounterToPage(points, index, sectionsOfTasks);
+    postCounterToPage(points, index, sectionsOfTasks);
   });
 
   isTaskCorrect(regexForScoreAndPoints);
