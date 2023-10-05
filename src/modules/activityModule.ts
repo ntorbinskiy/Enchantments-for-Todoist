@@ -4,10 +4,8 @@ import {
   findScoreBlockElement,
   updateScore,
 } from "../components/scoreBlock";
-import {
-  createUnknownEstimates,
-  findUnknownEstimatesElement,
-} from "../components/unknownEstimates";
+import { findUnknownEstimatesElement } from "../components/unknownEstimates/unknownEstimates";
+import { createUnknownEstimatesActivity } from "../components/unknownEstimates/unknownEstimatesActivity";
 import nodeToArray from "../helpers/nodeToArray";
 
 const isTaskCompleted = (svgPath: string): boolean => {
@@ -148,7 +146,7 @@ const isTaskCorrect = (regexForScoreAndPoints: RegExp) => {
     if (isTaskAssigned(svgPath)) {
       const unknownEstimatesElement = findUnknownEstimatesElement(taskItem);
       if (!unknownEstimatesElement && score === null) {
-        const unknownEstimates = createUnknownEstimates(alertOptions);
+        const unknownEstimates = createUnknownEstimatesActivity(alertOptions);
 
         taskText.after(unknownEstimates);
       }

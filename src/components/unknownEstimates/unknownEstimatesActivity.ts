@@ -1,3 +1,5 @@
+import { UNKNOWN_ESTIMATES } from "./unknownEstimates";
+
 interface createUnknownEstimatesArgs {
   readonly taskItem: HTMLElement;
   readonly taskTime: Element;
@@ -8,7 +10,6 @@ interface SetStylesForUnknownEstimatesArgs extends createUnknownEstimatesArgs {
   readonly unknownEstimates: HTMLSpanElement;
 }
 
-const UNKNOWN_ESTIMATES = "UNKNOWN_ESTIMATES";
 const limitOfCharactersPerTask = 86;
 
 const html = document.documentElement;
@@ -42,13 +43,7 @@ const setStylesForUnknownEstimates = ({
   unknownEstimates.style.left = "0px";
 };
 
-export const findUnknownEstimatesElement = (
-  taskItem: HTMLElement
-): Element | null => {
-  return taskItem.querySelector(`#${UNKNOWN_ESTIMATES}`);
-};
-
-export const createUnknownEstimates = ({
+export const createUnknownEstimatesActivity = ({
   taskItem,
   taskTime,
   taskName,
