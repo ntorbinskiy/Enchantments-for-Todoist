@@ -1,8 +1,5 @@
-import { UNKNOWN_ESTIMATES } from "./unknownEstimates";
-
 interface createUnknownEstimatesArgs {
-  readonly taskItem: HTMLElement;
-  readonly taskTime: Element;
+  readonly taskElement: HTMLElement;
   readonly taskName: string;
 }
 
@@ -17,17 +14,14 @@ const html = document.documentElement;
 const themeState = html.classList.contains("theme_dark") ? "dark" : "light";
 
 const setStylesForUnknownEstimates = ({
-  taskItem,
-  taskTime,
+  taskElement,
   taskName,
   unknownEstimates,
 }: SetStylesForUnknownEstimatesArgs): void => {
-  taskItem.style.backgroundColor =
+  taskElement.style.backgroundColor =
     themeState === "light" ? "rgb(229, 246, 253)" : "rgb(7, 19, 24)";
 
   unknownEstimates.innerHTML = "Unknown estimates for this task";
-
-  taskTime.id = UNKNOWN_ESTIMATES;
 
   if (taskName.length >= limitOfCharactersPerTask) {
     unknownEstimates.style.left = "64px";
@@ -43,16 +37,14 @@ const setStylesForUnknownEstimates = ({
   unknownEstimates.style.left = "0px";
 };
 
-export const createUnknownEstimatesActivity = ({
-  taskItem,
-  taskTime,
-  taskName,
-}: createUnknownEstimatesArgs): HTMLSpanElement => {
+export const createUnknownEstimatesActivity = (
+  taskElement: HTMLElement,
+  taskName: string
+): HTMLSpanElement => {
   const unknownEstimates = document.createElement("span");
 
-  const stylesForUnknownEstimatesOptions = {
-    taskItem,
-    taskTime,
+  const stylesForUnknownEstimatesOptions: SetStylesForUnknownEstimatesArgs = {
+    taskElement,
     taskName,
     unknownEstimates,
   };
