@@ -1,3 +1,5 @@
+import { UNKNOWN_ESTIMATES } from "./unknownEstimates";
+
 interface createUnknownEstimatesArgs {
   readonly taskElement: HTMLElement;
   readonly taskName: string;
@@ -9,20 +11,17 @@ interface SetStylesForUnknownEstimatesArgs extends createUnknownEstimatesArgs {
 
 const limitOfCharactersPerTask = 86;
 
-const html = document.documentElement;
-
-const themeState = html.classList.contains("theme_dark") ? "dark" : "light";
-
 const setStylesForUnknownEstimates = ({
   taskElement,
   taskName,
   unknownEstimates,
 }: SetStylesForUnknownEstimatesArgs): void => {
-  taskElement.style.backgroundColor =
-    themeState === "light" ? "rgb(229, 246, 253)" : "rgb(7, 19, 24)";
+  //   taskElement.style.backgroundColor = "rgb(7, 19, 24)";
+  taskElement.className = "unknown-estimates-task-element";
 
   unknownEstimates.innerHTML = "Unknown estimates for this task";
 
+  unknownEstimates.className = UNKNOWN_ESTIMATES;
   if (taskName.length >= limitOfCharactersPerTask) {
     unknownEstimates.style.left = "64px";
   }
@@ -30,8 +29,7 @@ const setStylesForUnknownEstimates = ({
   unknownEstimates.style.fontSize = "11px";
   unknownEstimates.style.fontWeight = "500";
   unknownEstimates.style.fontFamily = "inherit";
-  unknownEstimates.style.color =
-    themeState === "light" ? "rgb(1, 67, 97)" : "rgb(184, 231, 251)";
+  unknownEstimates.style.color = "rgb(184, 231, 251)";
   unknownEstimates.style.position = "relative";
   unknownEstimates.style.top = "0px";
   unknownEstimates.style.left = "0px";

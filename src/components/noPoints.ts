@@ -21,7 +21,7 @@ const setStylesForNoPoints = ({
 
   noPoints.innerHTML = "No points entered for this task";
 
-  taskTime.id = NO_POINTS;
+  taskTime.className = NO_POINTS;
 
   if (taskName.length >= limitOfCharactersPerTask) {
     noPoints.style.left = "64px";
@@ -37,7 +37,7 @@ const setStylesForNoPoints = ({
 };
 
 export const findNoPointsElement = (taskItem: HTMLElement): Element | null => {
-  return taskItem.querySelector(`#${NO_POINTS}`);
+  return taskItem.querySelector(`[class='${NO_POINTS}']`);
 };
 
 export const createNoPoints = ({

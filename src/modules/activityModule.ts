@@ -1,4 +1,3 @@
-import { createNoPoints, findNoPointsElement } from "../components/noPoints";
 import {
   createScoreBlock,
   findScoreBlockElement,
@@ -39,16 +38,19 @@ const mapElementToTask = (taskElement: ChildNode): Task | undefined => {
 const mapNodesToTasks = (
   childNodes: NodeListOf<ChildNode>
 ): readonly Task[] => {
-  return nodeToArray(childNodes).map(mapElementToTask).filter(isDefined);
+  return nodeToArray(childNodes)
+    .map(mapElementToTask)
+    .filter(isDefined)
+    .filter((task) => task.isCompleted);
 };
 
-const getTasksScores = (childNodes: NodeListOf<ChildNode>): number => {
-  return getTasksScoreNumber(mapNodesToTasks(childNodes));
-};
+// const getTasksScores = (childNodes: NodeListOf<ChildNode>): number => {
+//   return getTasksScoreNumber(mapNodesToTasks(childNodes));
+// };
 
-const mapTasks = (tasks: Element[] | ChildNode[]): number[] => {
-  return tasks.map((task) => getTasksScores(task.childNodes));
-};
+// const mapTasks = (tasks: Element[] | ChildNode[]): number[] => {
+//   return tasks.map((task) => getTasksScores(task.childNodes));
+// };
 
 const postCounterToPage = (points: number, sectionElement: Element): void => {
   const scoreBlockParent = sectionElement.querySelector("h2");
@@ -90,56 +92,6 @@ const updateTaskLabel = (taskElement: HTMLElement, task: Task): void => {
       taskText?.after(unknownEstimates);
     }
   }
-
-  //   const taskIcons = nodeToArray(
-  //     document.getElementsByClassName("avatar_event_icon")
-  //   );
-  //   if (taskIcons instanceof Element) {
-  //     return;
-  //   }
-  //   taskIcons.map((taskIcon) => {
-  //     if (
-  //       !taskIcon.parentElement ||
-  //       !(taskIcon instanceof HTMLElement) ||
-  //       !taskIcon.parentElement.parentElement
-  //     ) {
-  //       return;
-  //     }
-  //     const taskItem = taskIcon.parentElement.parentElement;
-  //     const taskNameItem = taskItem.querySelector(".task_content");
-  //     const taskTime = taskItem.querySelector("span.activity_time");
-  //     const taskText = taskItem.querySelector(".text");
-  //     const svgIcon = taskIcon.querySelector("svg");
-  //     if (!svgIcon || !taskNameItem || !taskTime || !taskText) {
-  //       return;
-  //     }
-  //     const svgPath = svgIcon.dataset.svgsPath ?? "";
-  //     const taskName = taskNameItem.textContent ?? "";
-  //     const score = tryGetItemScore(taskName);
-  //     const alertOptions = {
-  //       taskItem,
-  //       taskTime,
-  //       taskName,
-  //     };
-  //     if (isTaskAssigned(svgPath)) {
-  //       const unknownEstimatesElement = findUnknownEstimatesElement(taskItem);
-  //       if (
-  //         !unknownEstimatesElement &&
-  //         score.type === ItemScoreTypes.Unassigned
-  //       ) {
-  //         const unknownEstimates = createUnknownEstimatesActivity(alertOptions);
-  //         taskText.after(unknownEstimates);
-  //       }
-  //     }
-  //     if (!isTaskCompleted(svgPath)) {
-  //       return;
-  //     }
-  //     const noPointsElement = findNoPointsElement(taskItem);
-  //     if (!noPointsElement && score.type === ItemScoreTypes.Undefined) {
-  //       const noPoints = createNoPoints(alertOptions);
-  //       taskText.after(noPoints);
-  //     }
-  //   });
 };
 
 const activityModule = (): void => {
@@ -151,7 +103,16 @@ const activityModule = (): void => {
     const sectionScoreNumber = getTasksScoreNumber(mapNodesToTasks(tasksNodes));
 
     postCounterToPage(sectionScoreNumber, section);
-    updateTaskLabel();
+
+    Array.from(tasksNodes).forEach((taskNode) => {
+      const taskItem = mapElementToTask(taskNode);
+
+      if (!taskItem || !(taskNode instanceof HTMLElement)) {
+        return;
+      }
+
+      updateTaskLabel(taskNode, taskItem);
+    });
   });
 };
 
