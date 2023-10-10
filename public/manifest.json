@@ -6,6 +6,7 @@
     {
       "matches": ["https://todoist.com/app/*"],
       "runat": "documet-idle",
+      "css": ["./css/styles.css"],
       "js": ["contentScript.js"]
     }
   ],

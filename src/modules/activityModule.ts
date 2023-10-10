@@ -77,7 +77,7 @@ const updateTaskLabel = (taskElement: HTMLElement, task: Task): void => {
   }
 
   if (task.isAssigned) {
-    const unknownEstimatesElement = findUnknownEstimatesElement(taskElement); // ! ADD className
+    const unknownEstimatesElement = findUnknownEstimatesElement(taskElement);
     if (
       !unknownEstimatesElement &&
       task.score.type === ItemScoreTypes.Unassigned

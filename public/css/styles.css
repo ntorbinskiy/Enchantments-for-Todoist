@@ -1,0 +1,17 @@
+.unknown-estimates-span {
+  font-size: 11px;
+  font-weight: 500;
+  font-family: inherit;
+  color: rgb(184, 231, 251);
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+
+.unknown-estimates-span-threshold {
+  left: 64px;
+}
+
+.unknown-estimates-task-element {
+  background-color: rgb(7, 19, 24);
+}
