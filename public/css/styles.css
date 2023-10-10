@@ -1,17 +1,28 @@
-.unknown-estimates-span {
+.activity-block-styles {
   font-size: 11px;
   font-weight: 500;
   font-family: inherit;
-  color: rgb(184, 231, 251);
   position: relative;
   top: 0px;
   left: 0px;
 }
 
-.unknown-estimates-span-threshold {
+.activity-block-span-threshold {
   left: 64px;
+}
+
+.unknown-estimates-text {
+  color: rgb(184, 231, 251);
 }
 
 .unknown-estimates-task-element {
   background-color: rgb(7, 19, 24);
+}
+
+.no-points-element {
+  background-color: rgba(246, 193, 4, 0.11);
+}
+
+.no-points-text {
+  color: #bc760d;
 }

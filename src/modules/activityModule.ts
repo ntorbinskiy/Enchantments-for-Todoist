@@ -1,3 +1,4 @@
+import { createNoPoints, findNoPointsElement } from "../components/noPoints";
 import {
   createScoreBlock,
   findScoreBlockElement,
@@ -76,6 +77,8 @@ const updateTaskLabel = (taskElement: HTMLElement, task: Task): void => {
     return;
   }
 
+  const taskText = taskElement.querySelector(".text");
+
   if (task.isAssigned) {
     const unknownEstimatesElement = findUnknownEstimatesElement(taskElement);
     if (
@@ -87,9 +90,16 @@ const updateTaskLabel = (taskElement: HTMLElement, task: Task): void => {
         task.name
       );
 
-      const taskText = taskElement.querySelector(".text");
-
       taskText?.after(unknownEstimates);
+    }
+  }
+
+  if (task.isCompleted) {
+    const noPointsElement = findNoPointsElement(taskElement);
+    if (!noPointsElement && task.score.type === ItemScoreTypes.Undefined) {
+      const noPoints = createNoPoints(taskElement, task.name);
+
+      taskText?.after(noPoints);
     }
   }
 };

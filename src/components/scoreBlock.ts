@@ -53,8 +53,6 @@ export const findScoreBlockElement = (
   return scoreBlockParent.querySelector(`#${SCORE_SUM}`);
 };
 
-// ? TODO: remove duplication of type guards
-
 export const updateScore = (scoreBlockParent: Element, points: number) => {
   const scoreTextOnPage = scoreBlockParent.querySelector(`#${SCORE_SUM}`);
 

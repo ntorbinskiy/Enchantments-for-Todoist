@@ -1,12 +1,12 @@
 import { UNKNOWN_ESTIMATES } from "./unknownEstimates";
 
-interface createUnknownEstimatesArgs {
+export interface createBlockArgs {
   readonly taskElement: HTMLElement;
   readonly taskName: string;
 }
 
-interface SetStylesForUnknownEstimatesArgs extends createUnknownEstimatesArgs {
-  readonly unknownEstimates: HTMLSpanElement;
+export interface SetStylesForBlockArgs extends createBlockArgs {
+  readonly block: HTMLSpanElement;
 }
 
 const limitOfCharactersPerTask = 86;
@@ -14,18 +14,20 @@ const limitOfCharactersPerTask = 86;
 const setStylesForUnknownEstimates = ({
   taskElement,
   taskName,
-  unknownEstimates,
-}: SetStylesForUnknownEstimatesArgs): void => {
-  //   console.log("mutation");
-  unknownEstimates.id = UNKNOWN_ESTIMATES;
-  taskElement.classList.add("unknown-estimates-task-element");
+  block,
+}: SetStylesForBlockArgs): void => {
+  block.id = UNKNOWN_ESTIMATES;
+  taskElement.classList.add(
+    "activity-block-styles",
+    "unknown-estimates-task-element"
+  );
 
-  unknownEstimates.innerHTML = "Unknown estimates for this task";
+  block.innerHTML = "Unknown estimates for this task";
 
-  unknownEstimates.classList.add("unknown-estimates-span");
+  block.classList.add("unknown-estimates-text");
 
   if (taskName.length >= limitOfCharactersPerTask) {
-    unknownEstimates.classList.add("unknown-estimates-span-threshold");
+    block.classList.add("activity-block-span-threshold");
   }
 };
 
@@ -35,10 +37,10 @@ export const createUnknownEstimatesActivity = (
 ): HTMLSpanElement => {
   const unknownEstimates = document.createElement("span");
 
-  const stylesForUnknownEstimatesOptions: SetStylesForUnknownEstimatesArgs = {
+  const stylesForUnknownEstimatesOptions: SetStylesForBlockArgs = {
     taskElement,
     taskName,
-    unknownEstimates,
+    block: unknownEstimates,
   };
   setStylesForUnknownEstimates(stylesForUnknownEstimatesOptions);
 

@@ -1,59 +1,41 @@
-interface CreateNoPointsArgs {
-  readonly taskItem: HTMLElement;
-  readonly taskTime: Element;
-  readonly taskName: string;
-}
-
-interface SetStylesForNoPointsArgs extends CreateNoPointsArgs {
-  readonly noPoints: HTMLSpanElement;
-}
+import { SetStylesForBlockArgs } from "./unknownEstimates/unknownEstimatesActivity";
 
 const NO_POINTS = "NO_POINTS";
 const limitOfCharactersPerTask = 86;
 
 const setStylesForNoPoints = ({
-  taskItem,
-  taskTime,
+  taskElement,
   taskName,
-  noPoints,
-}: SetStylesForNoPointsArgs): void => {
-  taskItem.style.backgroundColor = "rgba(246, 193, 4, 0.11)";
+  block,
+}: SetStylesForBlockArgs): void => {
+  taskElement.classList.add("no-points-element");
+  block.innerHTML = "No points entered for this task";
 
-  noPoints.innerHTML = "No points entered for this task";
-
-  taskTime.className = NO_POINTS;
+  block.id = NO_POINTS;
 
   if (taskName.length >= limitOfCharactersPerTask) {
-    noPoints.style.left = "64px";
+    block.classList.add("activity-block-span-threshold");
   }
 
-  noPoints.style.fontSize = "11px";
-  noPoints.style.fontWeight = "500";
-  noPoints.style.fontFamily = "inherit";
-  noPoints.style.color = "#BC760D";
-  noPoints.style.position = "relative";
-  noPoints.style.top = "0px";
-  noPoints.style.left = "0px";
+  block.classList.add("activity-block-styles", "no-points-text");
 };
 
 export const findNoPointsElement = (taskItem: HTMLElement): Element | null => {
-  return taskItem.querySelector(`[class='${NO_POINTS}']`);
+  return taskItem.querySelector(`#${NO_POINTS}`);
 };
 
-export const createNoPoints = ({
-  taskItem,
-  taskTime,
-  taskName,
-}: CreateNoPointsArgs): HTMLSpanElement => {
-  const noPoints = document.createElement("span");
+export const createNoPoints = (
+  taskElement: HTMLElement,
+  taskName: string
+): HTMLSpanElement => {
+  const block = document.createElement("span");
 
-  const stylesForNoPointsOptions = {
-    taskItem,
-    taskTime,
+  const stylesForNoPointsOptions: SetStylesForBlockArgs = {
+    taskElement,
     taskName,
-    noPoints,
+    block,
   };
   setStylesForNoPoints(stylesForNoPointsOptions);
 
-  return noPoints;
+  return block;
 };
