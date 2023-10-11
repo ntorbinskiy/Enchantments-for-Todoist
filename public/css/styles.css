@@ -26,3 +26,32 @@
 .no-points-text {
   color: #bc760d;
 }
+
+.header-of-project {
+  display: grid !important;
+  grid-template-rows: 0fr 2fr;
+  grid-template-columns: auto auto;
+  gap: 21px;
+}
+
+.buttons-group {
+  grid-column-start: 2;
+}
+
+.total-points-element {
+  min-width: 190px;
+  justify-self: end;
+  grid-column-start: 2;
+  position: relative;
+  top: 8px;
+}
+
+.project-name {
+  width: auto !important;
+  grid-row-start: 2;
+}
+
+.header-root {
+  display: grid !important;
+  grid-template-columns: 50%;
+}

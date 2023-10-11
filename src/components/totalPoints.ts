@@ -23,10 +23,7 @@ export const updateTotalPointsScore = (
 const setTotalPointsParentStyles = (
   totalPointsParent: HTMLDivElement
 ): void => {
-  totalPointsParent.style.minWidth = "190px";
-  totalPointsParent.style.justifySelf = "end";
-  totalPointsParent.style.gridColumnStart = "-2";
-  totalPointsParent.style.gridRowStart = "2";
+  totalPointsParent.classList.add("total-points-element");
   totalPointsParent.id = TOTAL_POINTS_ID;
 };
 

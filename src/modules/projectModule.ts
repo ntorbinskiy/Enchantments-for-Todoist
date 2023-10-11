@@ -9,8 +9,7 @@ import {
 interface SetPageStylesArgs {
   readonly buttonsGroup: HTMLElement;
   readonly headerOfProject: HTMLElement;
-  readonly projectName: HTMLHeadingElement;
-  readonly editProjectNameMode: Element | null;
+  readonly projectName: HTMLElement;
 }
 
 const linkLogic = (): void => {
@@ -62,47 +61,22 @@ const getTotalPoints = (namesOfTasks: NodeListOf<Element>): number => {
     .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 };
 
-const setHeaderOfProjectStyles = (headerOfProject: HTMLElement): void => {
-  headerOfProject.style.display = "grid";
-  headerOfProject.style.gridTemplateRows = "0fr 2fr";
-  headerOfProject.style.gridTemplateColumns = "auto auto";
-  headerOfProject.style.alignItems = "center";
-  headerOfProject.style.gap = "21px";
-};
-
-const setButtonGroupStyles = (buttonsGroup: HTMLElement): void => {
-  buttonsGroup.style.gridColumnStart = "2";
-};
-
 const setPageStyles = ({
   buttonsGroup,
   headerOfProject,
   projectName,
-  editProjectNameMode,
 }: SetPageStylesArgs): void => {
-  setHeaderOfProjectStyles(headerOfProject);
+  headerOfProject.classList.add("header-root");
 
-  setButtonGroupStyles(buttonsGroup);
+  buttonsGroup.classList.add("buttons-group");
 
-  if (editProjectNameMode instanceof HTMLElement) {
-    editProjectNameMode.style.gridRow = "span 2";
-  } else if (projectName) {
-    projectName.style.gridRowStart = "2";
-  }
-
-  if (
-    projectName &&
-    projectName.parentElement &&
-    projectName.parentElement !== headerOfProject
-  ) {
-    projectName.parentElement.style.gridRowStart = "2";
-    headerOfProject.style.alignItems = "center";
-  }
+  projectName.classList.add("project-name");
 };
 
 const totalPointsLogic = (): void => {
   const namesOfTasks = document.querySelectorAll("div.task_content");
-  const headerOfProject = document.querySelector("div.view_header__content");
+  const headerOfProject = document.querySelector("div.view_header__content")
+    ?.childNodes[0]?.childNodes[0]; // I can't get this element other way, because there is dynamic class
 
   if (!(headerOfProject instanceof HTMLElement)) {
     return;
@@ -111,10 +85,9 @@ const totalPointsLogic = (): void => {
   const buttonsGroup = headerOfProject.querySelector(
     "div.view_header__actions"
   );
-  const editProjectNameMode = document.querySelector(
-    "[data-testid=view_header__form]"
-  );
-  const projectName = document.querySelector("h1");
+
+  const projectName =
+    headerOfProject.querySelector("h1[role='heading']")?.parentElement;
 
   if (
     !(buttonsGroup instanceof HTMLElement) ||
@@ -123,11 +96,10 @@ const totalPointsLogic = (): void => {
     return;
   }
 
-  const totalPointsOptions = {
+  const totalPointsOptions: SetPageStylesArgs = {
     buttonsGroup,
     headerOfProject,
     projectName,
-    editProjectNameMode,
   };
 
   setPageStyles(totalPointsOptions);
