@@ -5,12 +5,34 @@ import {
   findTotalPointsElement,
   updateTotalPointsScore,
 } from "../components/totalPoints";
+import { Task } from "../core/types";
+import { getTasksScoreNumber, tryGetItemScore } from "../core/taskUtils";
+import { isDefined } from "../helpers/isDefined";
 
 interface SetPageStylesArgs {
   readonly buttonsGroup: HTMLElement;
   readonly headerOfProject: HTMLElement;
   readonly projectName: HTMLElement;
 }
+
+const mapElementToTask = (taskElement: Element): Task | undefined => {
+  const name = taskElement.innerHTML || "error";
+  const modalDialog = document.querySelector("div[role=dialog]");
+
+  return {
+    name,
+    isAssigned: false,
+    isCompleted: false,
+    score: tryGetItemScore(name),
+    containsModalDialog: !modalDialog
+      ? false
+      : modalDialog.contains(taskElement),
+  };
+};
+
+const mapElementsToTasks = (tasks: NodeListOf<Element>): readonly Task[] => {
+  return Array.from(tasks).map(mapElementToTask).filter(isDefined);
+};
 
 const linkLogic = (): void => {
   const listOfItems = document.querySelectorAll(
@@ -42,25 +64,6 @@ const linkLogic = (): void => {
   });
 };
 
-const getTotalPoints = (namesOfTasks: NodeListOf<Element>): number => {
-  const regexForTotalPoints = /^.*\[(?<score>\d+)\]\s*.*$/;
-  const modalDialog = document.querySelector("div[role=dialog]");
-
-  return nodeToArray(namesOfTasks)
-    .filter((task) => {
-      return modalDialog === null || !modalDialog.contains(task);
-    })
-    .map((nameOfTaskItem) => {
-      const taskTextContent = nameOfTaskItem.textContent ?? "";
-      const scoreText =
-        taskTextContent.replaceAll("\n", " ").match(regexForTotalPoints)
-          ?.groups?.["score"] ?? "";
-
-      return parseInt(scoreText) || 0;
-    })
-    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-};
-
 const setPageStyles = ({
   buttonsGroup,
   headerOfProject,
@@ -72,9 +75,28 @@ const setPageStyles = ({
 
   projectName.classList.add("project-name");
 };
+const updateTasksLabel = (
+  tasks: readonly Task[],
+  buttonsGroup: HTMLElement
+): void => {
+  const totalPointsScore = getTasksScoreNumber(tasks, true);
+
+  const totalPointsElement = findTotalPointsElement();
+
+  if (!totalPointsElement) {
+    const totalPoints = createTotalPoints(totalPointsScore);
+    buttonsGroup.after(totalPoints);
+    return;
+  }
+
+  updateTotalPointsScore(totalPointsElement, totalPointsScore);
+};
 
 const totalPointsLogic = (): void => {
-  const namesOfTasks = document.querySelectorAll("div.task_content");
+  const tasks = mapElementsToTasks(
+    document.querySelectorAll("div.task_content")
+  );
+
   const headerOfProject = document.querySelector("div.view_header__content")
     ?.childNodes[0]?.childNodes[0]; // I can't get this element other way, because there is dynamic class
 
@@ -86,8 +108,7 @@ const totalPointsLogic = (): void => {
     "div.view_header__actions"
   );
 
-  const projectName =
-    headerOfProject.querySelector("h1[role='heading']")?.parentElement;
+  const projectName = headerOfProject.querySelector("h1")?.parentElement;
 
   if (
     !(buttonsGroup instanceof HTMLElement) ||
@@ -96,25 +117,15 @@ const totalPointsLogic = (): void => {
     return;
   }
 
-  const totalPointsOptions: SetPageStylesArgs = {
+  const pageStyles: SetPageStylesArgs = {
     buttonsGroup,
     headerOfProject,
     projectName,
   };
 
-  setPageStyles(totalPointsOptions);
+  setPageStyles(pageStyles);
 
-  const totalPointsScore = getTotalPoints(namesOfTasks);
-
-  const totalPointsElement = findTotalPointsElement();
-
-  if (!totalPointsElement) {
-    const totalPoints = createTotalPoints(totalPointsScore);
-    buttonsGroup.after(totalPoints);
-    return;
-  }
-
-  updateTotalPointsScore(totalPointsElement, totalPointsScore);
+  updateTasksLabel(tasks, buttonsGroup);
 };
 
 const projectModule = (): void => {

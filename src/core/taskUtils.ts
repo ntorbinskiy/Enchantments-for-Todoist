@@ -40,9 +40,22 @@ const itemScoreToNumber = (itemScore: ItemScore): number => {
 export const getItemScoreNumberByName = (taskName: string): number =>
   itemScoreToNumber(tryGetItemScore(taskName));
 
-export const getTasksScoreNumber = (tasks: readonly Task[]): number => {
+const reduceTasksPoints = (tasks: readonly Task[]): number => {
   return tasks.reduce(
     (accumulator, { score }) => accumulator + itemScoreToNumber(score),
     0
   );
+};
+
+export const getTasksScoreNumber = (
+  tasks: readonly Task[],
+  isProjectModule?: boolean
+): number => {
+  if (isProjectModule) {
+    const filteredTasks = tasks.filter((task) => !task.containsModalDialog);
+
+    return reduceTasksPoints(filteredTasks);
+  }
+
+  return reduceTasksPoints(tasks);
 };

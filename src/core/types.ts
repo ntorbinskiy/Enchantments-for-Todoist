@@ -3,7 +3,7 @@ export type Task = {
   score: ItemScore;
   isCompleted: boolean;
   isAssigned: boolean;
-  hasUnknownEstimatesLabel: boolean;
+  containsModalDialog: boolean;
 };
 
 export const enum ItemScoreTypes {

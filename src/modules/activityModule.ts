@@ -32,7 +32,7 @@ const mapElementToTask = (taskElement: ChildNode): Task | undefined => {
     isAssigned: svgPath === assignedImagePath,
     isCompleted: svgPath === completedImagePath,
     score: tryGetItemScore(name),
-    hasUnknownEstimatesLabel: findUnknownEstimatesElement(taskElement) !== null,
+    containsModalDialog: false,
   };
 };
 
@@ -44,14 +44,6 @@ const mapNodesToTasks = (
     .filter(isDefined)
     .filter((task) => task.isCompleted);
 };
-
-// const getTasksScores = (childNodes: NodeListOf<ChildNode>): number => {
-//   return getTasksScoreNumber(mapNodesToTasks(childNodes));
-// };
-
-// const mapTasks = (tasks: Element[] | ChildNode[]): number[] => {
-//   return tasks.map((task) => getTasksScores(task.childNodes));
-// };
 
 const postCounterToPage = (points: number, sectionElement: Element): void => {
   const scoreBlockParent = sectionElement.querySelector("h2");
