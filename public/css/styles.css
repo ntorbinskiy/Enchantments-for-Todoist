@@ -16,7 +16,9 @@
 }
 
 .unknown-estimates-task-element {
-  background-color: rgb(7, 19, 24);
+  background-color: var(
+    --product-library-priorities-p3-disabled-tint
+  ) !important;
 }
 
 .no-points-element {
@@ -54,4 +56,8 @@
 .header-root {
   display: grid !important;
   grid-template-columns: 50%;
+}
+
+.unknown-estimates-task-buttons {
+  background: none;
 }
