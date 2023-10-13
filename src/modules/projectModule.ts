@@ -5,9 +5,11 @@ import {
   findTotalPointsElement,
   updateTotalPointsScore,
 } from "../components/totalPoints";
-import { Task } from "../core/types";
+import { ItemScoreTypes, Task } from "../core/types";
 import { getTasksScoreNumber, tryGetItemScore } from "../core/taskUtils";
 import { isDefined } from "../helpers/isDefined";
+import { findUnknownEstimatesElement } from "../components/unknownEstimates/unknownEstimates";
+import { createUnknownEstimatesProject } from "../components/unknownEstimates/unknownEstimatesProject";
 
 interface SetPageStylesArgs {
   readonly buttonsGroup: HTMLElement;
@@ -15,8 +17,14 @@ interface SetPageStylesArgs {
   readonly projectName: HTMLElement;
 }
 
+export const buttonsGroupClass = ".task_list_item__actions";
+
 const mapElementToTask = (taskElement: Element): Task | undefined => {
-  const name = taskElement.innerHTML || "error";
+  if (!(taskElement instanceof HTMLElement)) {
+    return undefined;
+  }
+
+  const name = taskElement.innerText || "error";
   const modalDialog = document.querySelector("div[role=dialog]");
 
   return {
@@ -34,19 +42,13 @@ const mapElementsToTasks = (tasks: NodeListOf<Element>): readonly Task[] => {
   return Array.from(tasks).map(mapElementToTask).filter(isDefined);
 };
 
-const linkLogic = (): void => {
-  const listOfItems = document.querySelectorAll(
-    "li[class='task_list_item task_list_item--project_hidden']"
-  );
-
+const linkLogic = (listOfItems: NodeListOf<Element>): void => {
   nodeToArray(listOfItems).map((task) => {
     if (!(task instanceof HTMLElement)) {
       return;
     }
 
-    const buttonLinkParent = task.querySelector(
-      ".task_list_item__actions--active"
-    );
+    const buttonLinkParent = task.querySelector(buttonsGroupClass);
 
     if (!buttonLinkParent) {
       return;
@@ -75,6 +77,31 @@ const setPageStyles = ({
 
   projectName.classList.add("project-name");
 };
+
+const updateUnknownEstimatesTask = (
+  taskElement: HTMLElement,
+  task: Task
+): void => {
+  const unknownEstimatesElement = findUnknownEstimatesElement(taskElement);
+
+  const taskText = taskElement.querySelector(
+    ".task_list_item__content__wrapper"
+  );
+
+  if (
+    !unknownEstimatesElement &&
+    task.score.type === ItemScoreTypes.Unassigned
+  ) {
+    const unknownEstimates = createUnknownEstimatesProject(taskElement);
+
+    if (!unknownEstimates) {
+      return;
+    }
+
+    taskText?.after(unknownEstimates);
+  }
+};
+
 const updateTasksLabel = (
   tasks: readonly Task[],
   buttonsGroup: HTMLElement
@@ -92,7 +119,19 @@ const updateTasksLabel = (
   updateTotalPointsScore(totalPointsElement, totalPointsScore);
 };
 
-const totalPointsLogic = (): void => {
+const updateUnknownEstimatesTasks = (taskNodes: NodeListOf<Element>): void => {
+  Array.from(taskNodes).map((taskNode) => {
+    const task = mapElementToTask(taskNode);
+
+    if (!task || !(taskNode instanceof HTMLElement)) {
+      return;
+    }
+
+    updateUnknownEstimatesTask(taskNode, task);
+  });
+};
+
+const totalPointsLogic = (taskNodes: NodeListOf<Element>): void => {
   const tasks = mapElementsToTasks(
     document.querySelectorAll("div.task_content")
   );
@@ -126,11 +165,17 @@ const totalPointsLogic = (): void => {
   setPageStyles(pageStyles);
 
   updateTasksLabel(tasks, buttonsGroup);
+
+  updateUnknownEstimatesTasks(taskNodes);
 };
 
 const projectModule = (): void => {
-  linkLogic();
-  totalPointsLogic();
+  const listOfItems = document.querySelectorAll(
+    "li[class='task_list_item task_list_item--project_hidden']"
+  );
+
+  linkLogic(listOfItems);
+  totalPointsLogic(listOfItems);
 };
 
 export default projectModule;

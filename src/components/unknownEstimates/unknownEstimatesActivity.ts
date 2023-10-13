@@ -1,4 +1,4 @@
-import { UNKNOWN_ESTIMATES } from "./unknownEstimates";
+import { UNKNOWN_ESTIMATES, unknownEstimatesMessage } from "./unknownEstimates";
 
 export interface createBlockArgs {
   readonly taskElement: HTMLElement;
@@ -22,7 +22,7 @@ const setStylesForUnknownEstimates = ({
     "unknown-estimates-task-element"
   );
 
-  block.innerHTML = "Unknown estimates for this task";
+  block.innerHTML = unknownEstimatesMessage;
 
   block.classList.add("unknown-estimates-text");
 
