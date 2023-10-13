@@ -5,27 +5,50 @@ import {
   findTotalPointsElement,
   updateTotalPointsScore,
 } from "../components/totalPoints";
+import { ItemScoreTypes, Task } from "../core/types";
+import { getTasksScoreNumber, tryGetItemScore } from "../core/taskUtils";
+import { isDefined } from "../helpers/isDefined";
+import { findUnknownEstimatesElement } from "../components/unknownEstimates/unknownEstimates";
+import { createUnknownEstimatesProject } from "../components/unknownEstimates/unknownEstimatesProject";
 
 interface SetPageStylesArgs {
   readonly buttonsGroup: HTMLElement;
   readonly headerOfProject: HTMLElement;
-  readonly projectName: HTMLHeadingElement;
-  readonly editProjectNameMode: Element | null;
+  readonly projectName: HTMLElement;
 }
 
-const linkLogic = (): void => {
-  const listOfItems = document.querySelectorAll(
-    "li[class='task_list_item task_list_item--project_hidden']"
-  );
+export const buttonsGroupClass = ".task_list_item__actions";
 
+const mapElementToTask = (taskElement: Element): Task | undefined => {
+  if (!(taskElement instanceof HTMLElement)) {
+    return undefined;
+  }
+
+  const name = taskElement.innerText || "error";
+  const modalDialog = document.querySelector("div[role=dialog]");
+
+  return {
+    name,
+    isAssigned: false,
+    isCompleted: false,
+    score: tryGetItemScore(name),
+    containsModalDialog: !modalDialog
+      ? false
+      : modalDialog.contains(taskElement),
+  };
+};
+
+const mapElementsToTasks = (tasks: NodeListOf<Element>): readonly Task[] => {
+  return Array.from(tasks).map(mapElementToTask).filter(isDefined);
+};
+
+const linkLogic = (listOfItems: NodeListOf<Element>): void => {
   nodeToArray(listOfItems).map((task) => {
     if (!(task instanceof HTMLElement)) {
       return;
     }
 
-    const buttonLinkParent = task.querySelector(
-      ".task_list_item__actions--active"
-    );
+    const buttonLinkParent = task.querySelector(buttonsGroupClass);
 
     if (!buttonLinkParent) {
       return;
@@ -43,96 +66,47 @@ const linkLogic = (): void => {
   });
 };
 
-const getTotalPoints = (namesOfTasks: NodeListOf<Element>): number => {
-  const regexForTotalPoints = /^.*\[(?<score>\d+)\]\s*.*$/;
-  const modalDialog = document.querySelector("div[role=dialog]");
-
-  return nodeToArray(namesOfTasks)
-    .filter((task) => {
-      return modalDialog === null || !modalDialog.contains(task);
-    })
-    .map((nameOfTaskItem) => {
-      const taskTextContent = nameOfTaskItem.textContent ?? "";
-      const scoreText =
-        taskTextContent.replaceAll("\n", " ").match(regexForTotalPoints)
-          ?.groups?.["score"] ?? "";
-
-      return parseInt(scoreText) || 0;
-    })
-    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-};
-
-const setHeaderOfProjectStyles = (headerOfProject: HTMLElement): void => {
-  headerOfProject.style.display = "grid";
-  headerOfProject.style.gridTemplateRows = "0fr 2fr";
-  headerOfProject.style.gridTemplateColumns = "auto auto";
-  headerOfProject.style.alignItems = "center";
-  headerOfProject.style.gap = "21px";
-};
-
-const setButtonGroupStyles = (buttonsGroup: HTMLElement): void => {
-  buttonsGroup.style.gridColumnStart = "2";
-};
-
 const setPageStyles = ({
   buttonsGroup,
   headerOfProject,
   projectName,
-  editProjectNameMode,
 }: SetPageStylesArgs): void => {
-  setHeaderOfProjectStyles(headerOfProject);
+  headerOfProject.classList.add("header-root");
 
-  setButtonGroupStyles(buttonsGroup);
+  buttonsGroup.classList.add("buttons-group");
 
-  if (editProjectNameMode instanceof HTMLElement) {
-    editProjectNameMode.style.gridRow = "span 2";
-  } else if (projectName) {
-    projectName.style.gridRowStart = "2";
-  }
+  projectName.classList.add("project-name");
+};
+
+const updateUnknownEstimatesTask = (
+  taskElement: HTMLElement,
+  task: Task
+): void => {
+  const unknownEstimatesElement = findUnknownEstimatesElement(taskElement);
+
+  const taskText = taskElement.querySelector(
+    ".task_list_item__content__wrapper"
+  );
 
   if (
-    projectName &&
-    projectName.parentElement &&
-    projectName.parentElement !== headerOfProject
+    !unknownEstimatesElement &&
+    task.score.type === ItemScoreTypes.Unassigned
   ) {
-    projectName.parentElement.style.gridRowStart = "2";
-    headerOfProject.style.alignItems = "center";
+    const unknownEstimates = createUnknownEstimatesProject(taskElement);
+
+    if (!unknownEstimates) {
+      return;
+    }
+
+    taskText?.after(unknownEstimates);
   }
 };
 
-const totalPointsLogic = (): void => {
-  const namesOfTasks = document.querySelectorAll("div.task_content");
-  const headerOfProject = document.querySelector("div.view_header__content");
-
-  if (!(headerOfProject instanceof HTMLElement)) {
-    return;
-  }
-
-  const buttonsGroup = headerOfProject.querySelector(
-    "div.view_header__actions"
-  );
-  const editProjectNameMode = document.querySelector(
-    "[data-testid=view_header__form]"
-  );
-  const projectName = document.querySelector("h1");
-
-  if (
-    !(buttonsGroup instanceof HTMLElement) ||
-    !(projectName instanceof HTMLElement)
-  ) {
-    return;
-  }
-
-  const totalPointsOptions = {
-    buttonsGroup,
-    headerOfProject,
-    projectName,
-    editProjectNameMode,
-  };
-
-  setPageStyles(totalPointsOptions);
-
-  const totalPointsScore = getTotalPoints(namesOfTasks);
+const updateTasksLabel = (
+  tasks: readonly Task[],
+  buttonsGroup: HTMLElement
+): void => {
+  const totalPointsScore = getTasksScoreNumber(tasks, true);
 
   const totalPointsElement = findTotalPointsElement();
 
@@ -145,9 +119,63 @@ const totalPointsLogic = (): void => {
   updateTotalPointsScore(totalPointsElement, totalPointsScore);
 };
 
+const updateUnknownEstimatesTasks = (taskNodes: NodeListOf<Element>): void => {
+  Array.from(taskNodes).map((taskNode) => {
+    const task = mapElementToTask(taskNode);
+
+    if (!task || !(taskNode instanceof HTMLElement)) {
+      return;
+    }
+
+    updateUnknownEstimatesTask(taskNode, task);
+  });
+};
+
+const totalPointsLogic = (taskNodes: NodeListOf<Element>): void => {
+  const tasks = mapElementsToTasks(
+    document.querySelectorAll("div.task_content")
+  );
+
+  const headerOfProject = document.querySelector("div.view_header__content")
+    ?.childNodes[0]?.childNodes[0]; // I can't get this element other way, because there is dynamic class
+
+  if (!(headerOfProject instanceof HTMLElement)) {
+    return;
+  }
+
+  const buttonsGroup = headerOfProject.querySelector(
+    "div.view_header__actions"
+  );
+
+  const projectName = headerOfProject.querySelector("h1")?.parentElement;
+
+  if (
+    !(buttonsGroup instanceof HTMLElement) ||
+    !(projectName instanceof HTMLElement)
+  ) {
+    return;
+  }
+
+  const pageStyles: SetPageStylesArgs = {
+    buttonsGroup,
+    headerOfProject,
+    projectName,
+  };
+
+  setPageStyles(pageStyles);
+
+  updateTasksLabel(tasks, buttonsGroup);
+
+  updateUnknownEstimatesTasks(taskNodes);
+};
+
 const projectModule = (): void => {
-  linkLogic();
-  totalPointsLogic();
+  const listOfItems = document.querySelectorAll(
+    "li[class='task_list_item task_list_item--project_hidden']"
+  );
+
+  linkLogic(listOfItems);
+  totalPointsLogic(listOfItems);
 };
 
 export default projectModule;

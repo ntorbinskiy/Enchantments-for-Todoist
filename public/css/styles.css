@@ -1,0 +1,84 @@
+.activity-block {
+  font-size: 11px;
+  font-weight: 500;
+  font-family: inherit;
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+
+.activity-block-span-threshold {
+  left: 64px;
+}
+
+.unknown-estimates-text {
+  color: var(--product-library-priorities-p3-idle-tint) !important;
+}
+
+.unknown-estimates-task-element {
+  background-color: var(
+    --product-library-priorities-p3-disabled-tint
+  ) !important;
+}
+
+.no-points-element {
+  background-color: rgba(246, 193, 4, 0.11);
+}
+
+.no-points-text {
+  color: #bc760d;
+}
+
+.header-of-project {
+  display: grid !important;
+  grid-template-rows: 0fr 2fr;
+  grid-template-columns: auto auto;
+  gap: 21px;
+}
+
+.buttons-group {
+  grid-column-start: 2;
+}
+
+.total-points-element {
+  min-width: 190px;
+  justify-self: end;
+  grid-column-start: 2;
+  position: relative;
+  top: 8px;
+}
+
+.project-name {
+  width: auto !important;
+  grid-row-start: 2;
+}
+
+.header-root {
+  display: grid !important;
+  grid-template-columns: 50%;
+}
+
+.unknown-estimates-task-buttons {
+  background: none !important;
+}
+
+.link-button {
+  margin-top: -1px;
+}
+
+.font-size-12 {
+  font-size: 12px;
+}
+
+.score-sum {
+  font-weight: 700;
+}
+
+.score-text {
+  font-weight: 400;
+}
+
+.score-parent {
+  display: flex;
+  justify-content: space-between;
+}

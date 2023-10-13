@@ -1,3 +1,5 @@
+import { addClasses } from "../helpers/addClasses";
+
 interface setStylesForScoresArgs {
   scoreSum: HTMLSpanElement;
   scoreText: HTMLSpanElement;
@@ -12,28 +14,19 @@ const setScoreSumStyles = (
   pointsCount: number
 ): void => {
   scoreSum.innerHTML = `${pointsCount}`;
-  scoreSum.style.fontSize = "12px";
-  scoreSum.style.fontWeight = "700";
-  scoreSum.style.fontFamily = "inherit";
-  scoreSum.style.position = "relative";
   scoreSum.id = SCORE_SUM;
+
+  addClasses(scoreSum, "score-sum", "font-size-12");
 };
 
 const setScoreTextStyles = (scoreText: HTMLSpanElement): void => {
   scoreText.innerHTML = "Total Score For This Day: ";
-  scoreText.style.fontSize = "12px";
-  scoreText.style.fontWeight = "400";
-  scoreText.style.fontFamily = "inherit";
-  scoreText.style.position = "relative";
+
+  addClasses(scoreText, "score-text", "font-size-12");
 };
 
 const setScoreBlockParentStyles = (scoreBlockParent: Element): void => {
-  if (!(scoreBlockParent instanceof HTMLElement)) {
-    return;
-  }
-
-  scoreBlockParent.style.display = "flex";
-  scoreBlockParent.style.justifyContent = "space-between";
+  addClasses(scoreBlockParent, "score-parent");
 };
 
 const setStylesForScores = ({
@@ -52,8 +45,6 @@ export const findScoreBlockElement = (
 ): Element | null => {
   return scoreBlockParent.querySelector(`#${SCORE_SUM}`);
 };
-
-// ? TODO: remove duplication of type guards
 
 export const updateScore = (scoreBlockParent: Element, points: number) => {
   const scoreTextOnPage = scoreBlockParent.querySelector(`#${SCORE_SUM}`);
