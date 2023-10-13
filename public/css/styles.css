@@ -1,4 +1,4 @@
-.activity-block-styles {
+.activity-block {
   font-size: 11px;
   font-weight: 500;
   font-family: inherit;
@@ -60,4 +60,25 @@
 
 .unknown-estimates-task-buttons {
   background: none !important;
+}
+
+.link-button {
+  margin-top: -1px;
+}
+
+.font-size-12 {
+  font-size: 12px;
+}
+
+.score-sum {
+  font-weight: 700;
+}
+
+.score-text {
+  font-weight: 400;
+}
+
+.score-parent {
+  display: flex;
+  justify-content: space-between;
 }

@@ -1,3 +1,5 @@
+import { addClasses } from "../helpers/addClasses";
+
 interface setupSvgArgs {
   readonly iconSvg: SVGSVGElement;
   readonly iconRect: SVGRectElement;
@@ -45,10 +47,7 @@ const setupSvg = ({
 };
 
 const setButtonStyles = (button: HTMLButtonElement): void => {
-  button.className = "button-href";
-  button.style.height = "24px";
-  button.style.width = "24px";
-  button.style.marginTop = "-1px";
+  addClasses(button, "button-href", "link-button");
 };
 
 const createOpenTaskButton = (taskId: string): HTMLButtonElement => {

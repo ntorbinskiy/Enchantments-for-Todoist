@@ -1,3 +1,4 @@
+import { addClasses } from "../../helpers/addClasses";
 import { UNKNOWN_ESTIMATES, unknownEstimatesMessage } from "./unknownEstimates";
 
 export interface createBlockArgs {
@@ -17,17 +18,13 @@ const setStylesForUnknownEstimates = ({
   block,
 }: SetStylesForBlockArgs): void => {
   block.id = UNKNOWN_ESTIMATES;
-  taskElement.classList.add(
-    "activity-block-styles",
-    "unknown-estimates-task-element"
-  );
-
   block.innerHTML = unknownEstimatesMessage;
 
-  block.classList.add("unknown-estimates-text");
+  addClasses(taskElement, "activity-block", "unknown-estimates-task-element");
+  addClasses(block, "unknown-estimates-text");
 
   if (taskName.length >= limitOfCharactersPerTask) {
-    block.classList.add("activity-block-span-threshold");
+    addClasses(block, "activity-block-span-threshold");
   }
 };
 
