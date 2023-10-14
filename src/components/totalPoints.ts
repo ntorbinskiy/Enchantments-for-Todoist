@@ -40,7 +40,7 @@ const setTotalPointsElementStyles = (
 const setTotalPointsSpanStyles = (
   totalPointsSpan: HTMLSpanElement,
   totalPoints: number
-) => {
+): void => {
   totalPointsSpan.textContent = `${totalPoints}`;
   addClasses(totalPointsSpan, "score-sum");
   totalPointsSpan.id = TOTAL_POINTS_SCORE_ID;

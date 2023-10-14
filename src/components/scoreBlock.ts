@@ -46,7 +46,10 @@ export const findScoreBlockElement = (
   return scoreBlockParent.querySelector(`#${SCORE_SUM}`);
 };
 
-export const updateScore = (scoreBlockParent: Element, points: number) => {
+export const updateScore = (
+  scoreBlockParent: Element,
+  points: number
+): void => {
   const scoreTextOnPage = scoreBlockParent.querySelector(`#${SCORE_SUM}`);
 
   if (!(scoreTextOnPage instanceof HTMLElement)) {
