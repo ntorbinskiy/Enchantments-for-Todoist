@@ -53,6 +53,7 @@
 
 .buttons-group {
   grid-column-start: 2;
+  justify-self: end;
 }
 
 .project-name {
