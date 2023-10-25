@@ -36,26 +36,27 @@
   gap: 21px;
 }
 
-.buttons-group {
-  grid-column-start: 2;
-}
-
 .total-points-element {
-  min-width: 190px;
   justify-self: end;
-  grid-column-start: 2;
+  grid-row-start: 2;
   position: relative;
   top: 8px;
 }
 
-.project-name {
-  width: auto !important;
-  grid-row-start: 2;
-}
-
 .header-root {
   display: grid !important;
-  grid-template-columns: 50%;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  justify-content: space-between !important;
+  align-items: start !important;
+}
+
+.buttons-group {
+  grid-column-start: 2;
+}
+
+.project-name {
+  grid-row-start: 2;
 }
 
 .unknown-estimates-task-buttons {

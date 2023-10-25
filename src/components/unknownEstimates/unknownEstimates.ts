@@ -1,5 +1,5 @@
 export const UNKNOWN_ESTIMATES = "UNKNOWN_ESTIMATES";
-export const unknownEstimatesMessage = "Unknown estimates for this task";
+export const unknownEstimatesMessage = "The task was not estimated with points";
 
 export const findUnknownEstimatesElement = (
   taskItem: Element

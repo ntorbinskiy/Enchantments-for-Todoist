@@ -18,6 +18,9 @@ interface SetPageStylesArgs {
 }
 
 export const buttonsGroupClass = ".task_list_item__actions";
+const headerOfProjectClass = "div.eae3d34f";
+const taskItemButtonsClass = "div._4bb9987d";
+const projectNameClass = "div._9dd31975";
 
 const mapElementToTask = (taskElement: Element): Task | undefined => {
   if (!(taskElement instanceof HTMLElement)) {
@@ -112,6 +115,10 @@ const updateTasksLabel = (
 
   if (!totalPointsElement) {
     const totalPoints = createTotalPoints(totalPointsScore);
+    if (!buttonsGroup.parentElement) {
+      return;
+    }
+
     buttonsGroup.after(totalPoints);
     return;
   }
@@ -136,18 +143,15 @@ const totalPointsLogic = (taskNodes: NodeListOf<Element>): void => {
     document.querySelectorAll("div.task_content")
   );
 
-  const headerOfProject = document.querySelector("div.view_header__content")
-    ?.childNodes[0]?.childNodes[0]; // I can't get this element other way, because there is dynamic class
+  const headerOfProject = document.querySelector(headerOfProjectClass);
 
   if (!(headerOfProject instanceof HTMLElement)) {
     return;
   }
 
-  const buttonsGroup = headerOfProject.querySelector(
-    "div.view_header__actions"
-  );
+  const buttonsGroup = headerOfProject.querySelector(taskItemButtonsClass);
 
-  const projectName = headerOfProject.querySelector("h1")?.parentElement;
+  const projectName = headerOfProject.querySelector(projectNameClass);
 
   if (
     !(buttonsGroup instanceof HTMLElement) ||
