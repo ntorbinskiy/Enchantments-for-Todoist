@@ -4,7 +4,7 @@
   "version": "2.1",
   "content_scripts": [
     {
-      "matches": ["https://todoist.com/app/*"],
+      "matches": ["https://app.todoist.com/app/*"],
       "runat": "documet-idle",
       "css": ["./css/styles.css"],
       "js": ["contentScript.js"]

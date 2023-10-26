@@ -17,7 +17,7 @@ const setStylesForNoPoints = ({
     block.classList.add("activity-block-span-threshold");
   }
 
-  block.classList.add("activity-block-styles", "no-points-text");
+  block.classList.add("activity-block", "no-points-text");
 };
 
 export const findNoPointsElement = (taskItem: HTMLElement): Element | null => {
