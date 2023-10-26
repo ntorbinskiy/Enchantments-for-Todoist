@@ -1,6 +1,6 @@
 {
   "name": "enchantments-for-todoist",
-  "version": "0.1.0",
+  "version": "1.0",
   "description": "Enchantments for Todoist This extension is going to level up your productivity, by providing some extra features for https://todoist.com/ website",
   "repository": "https://github.com/ntorbinskiy/Enchantments-for-Todoist/",
   "author": "Nikita Torbinskiy",
@@ -8,8 +8,7 @@
   "scripts": {
     "watch": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.prod.js && npm-build-zip --source=./dist/ --name=build --name_only=true",
-    "clean-dist": "rimraf dist",
-    "clean-build": "rimraf build.zip",
+    "clean": "rimraf dist && rimraf build.zip",
     "lint": "npx eslint ."
   },
   "devDependencies": {
