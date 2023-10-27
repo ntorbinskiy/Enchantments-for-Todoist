@@ -3,7 +3,7 @@ import projectModule from "./projectModule";
 
 const runApp = (): void => {
   const windowLink = window.location.href;
-  const todoistLink = "https://app.todoist.com/app";
+  const todoistLink = "https://todoist.com/app";
 
   if (
     windowLink.includes(`${todoistLink}/project`) ||

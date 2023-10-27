@@ -10,17 +10,18 @@ import { getTasksScoreNumber, tryGetItemScore } from "../core/taskUtils";
 import { isDefined } from "../helpers/isDefined";
 import { findUnknownEstimatesElement } from "../components/unknownEstimates/unknownEstimates";
 import { createUnknownEstimatesProject } from "../components/unknownEstimates/unknownEstimatesProject";
+import { addClasses } from "../helpers/addClasses";
 
 interface SetPageStylesArgs {
   readonly buttonsGroup: HTMLElement;
   readonly headerOfProject: HTMLElement;
-  readonly projectName: HTMLElement;
+  readonly projectName: Element | null;
 }
 
+const headerOfProjectClass = "div.view_header__content";
+const taskItemButtonsClass = "div.view_header__actions";
+const projectNameSelector = "[data-testid='view_header__form']";
 export const buttonsGroupClass = ".task_list_item__actions";
-const headerOfProjectClass = "div.eae3d34f";
-const taskItemButtonsClass = "div._4bb9987d";
-const projectNameClass = "div._9dd31975";
 
 const mapElementToTask = (taskElement: Element): Task | undefined => {
   if (!(taskElement instanceof HTMLElement)) {
@@ -74,11 +75,24 @@ const setPageStyles = ({
   headerOfProject,
   projectName,
 }: SetPageStylesArgs): void => {
-  headerOfProject.classList.add("header-root");
+  addClasses(headerOfProject, "header-root");
 
-  buttonsGroup.classList.add("buttons-group");
+  addClasses(buttonsGroup, "buttons-group");
 
-  projectName.classList.add("project-name");
+  if (
+    projectName &&
+    projectName.parentElement &&
+    projectName.parentElement !== headerOfProject
+  ) {
+    addClasses(projectName.parentElement, "project-name");
+    return;
+  }
+
+  if (!projectName) {
+    return;
+  }
+
+  addClasses(projectName, "project-name");
 };
 
 const updateUnknownEstimatesTask = (
@@ -151,19 +165,18 @@ const totalPointsLogic = (taskNodes: NodeListOf<Element>): void => {
 
   const buttonsGroup = headerOfProject.querySelector(taskItemButtonsClass);
 
-  const projectName = headerOfProject.querySelector(projectNameClass);
+  const projectName = headerOfProject.querySelector("h1");
 
-  if (
-    !(buttonsGroup instanceof HTMLElement) ||
-    !(projectName instanceof HTMLElement)
-  ) {
+  const projectForm = headerOfProject.querySelector(projectNameSelector);
+
+  if (!(buttonsGroup instanceof HTMLElement)) {
     return;
   }
 
   const pageStyles: SetPageStylesArgs = {
     buttonsGroup,
     headerOfProject,
-    projectName,
+    projectName: !projectName && projectForm ? projectForm : projectName,
   };
 
   setPageStyles(pageStyles);
