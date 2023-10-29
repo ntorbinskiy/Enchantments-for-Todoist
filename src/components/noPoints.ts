@@ -1,3 +1,4 @@
+import { addClasses } from "../helpers/addClasses";
 import { SetStylesForBlockArgs } from "./unknownEstimates/unknownEstimatesActivity";
 
 const NO_POINTS = "NO_POINTS";
@@ -8,16 +9,16 @@ const setStylesForNoPoints = ({
   taskName,
   block,
 }: SetStylesForBlockArgs): void => {
-  taskElement.classList.add("no-points-element");
+  addClasses(taskElement, "no-points-element");
   block.innerHTML = "No points entered for this task";
 
   block.id = NO_POINTS;
 
   if (taskName.length >= limitOfCharactersPerTask) {
-    block.classList.add("activity-block-span-threshold");
+    addClasses(block, "activity-block-span-threshold");
   }
 
-  block.classList.add("activity-block", "no-points-text");
+  addClasses(block, "activity-block", "no-points-text");
 };
 
 export const findNoPointsElement = (taskItem: HTMLElement): Element | null => {
