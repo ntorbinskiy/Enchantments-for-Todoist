@@ -16,9 +16,19 @@
 }
 
 .unknown-estimates-task-element {
+  position: relative;
+}
+
+.unknown-estimates-task-element::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
   background-color: var(
     --product-library-priorities-p3-disabled-tint
   ) !important;
+  opacity: 0.5;
 }
 
 .no-points-element {
