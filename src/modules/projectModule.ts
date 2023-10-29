@@ -187,9 +187,7 @@ const totalPointsLogic = (taskNodes: NodeListOf<Element>): void => {
 };
 
 const projectModule = (): void => {
-  const listOfItems = document.querySelectorAll(
-    "li[class='task_list_item task_list_item--project_hidden']"
-  );
+  const listOfItems = document.querySelectorAll("li.task_list_item");
 
   linkLogic(listOfItems);
   totalPointsLogic(listOfItems);

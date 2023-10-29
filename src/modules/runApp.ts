@@ -9,7 +9,6 @@ const runApp = (): void => {
     windowLink.includes(`${todoistLink}/project`) ||
     windowLink === `${todoistLink}/today`
   ) {
-    console.log("project module");
     projectModule();
   } else if (windowLink.includes(`${todoistLink}/activity`)) {
     activityModule();
