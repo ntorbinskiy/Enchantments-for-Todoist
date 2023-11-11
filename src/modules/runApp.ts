@@ -5,7 +5,8 @@ const runApp = (): void => {
   console.log("da");
   const windowLink = window.location.href;
   const todoistLink = "https://todoist.com/app";
-  const todoistAppLink = "https://app.todoist.com/app/*";
+  const todoistAppLink = "https://app.todoist.com/app";
+
   if (
     windowLink.includes(`${todoistLink}/project`) ||
     windowLink === `${todoistLink}/today` ||
@@ -14,10 +15,8 @@ const runApp = (): void => {
   ) {
     projectModule();
   } else if (
-    windowLink.includes(
-      `${todoistLink}/activity` ||
-        windowLink.includes(`${todoistAppLink}/activity`)
-    )
+    windowLink.includes(`${todoistLink}/activity`) ||
+    windowLink.includes(`${todoistAppLink}/activity`)
   ) {
     activityModule();
   }

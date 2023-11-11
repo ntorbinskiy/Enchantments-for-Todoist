@@ -159,24 +159,39 @@ const totalPointsLogic = (taskNodes: NodeListOf<Element>): void => {
 
   const headerOfProject = document.querySelector(headerOfProjectClass);
 
-  if (!(headerOfProject instanceof HTMLElement)) {
-    return;
+  if (
+    !(headerOfProject instanceof HTMLElement) ||
+    !headerOfProject.childNodes[0] ||
+    !headerOfProject.childNodes[0].childNodes[0] ||
+    !(
+      headerOfProject.childNodes[0].childNodes[0].childNodes[0] instanceof
+      HTMLElement
+    )
+  ) {
+    throw new Error("Error - header-root is not defined");
   }
 
-  const buttonsGroup = headerOfProject.querySelector(taskItemButtonsClass);
+  const headerRoot = headerOfProject.childNodes[0].childNodes[0].childNodes[0];
 
-  const projectName = headerOfProject.querySelector("h1");
+  const buttonsGroup =
+    headerOfProject.querySelector(taskItemButtonsClass)?.parentElement;
+
+  const projectName = headerRoot.childNodes[0];
 
   const projectForm = headerOfProject.querySelector(projectNameSelector);
 
-  if (!(buttonsGroup instanceof HTMLElement)) {
+  if (
+    !(buttonsGroup instanceof HTMLElement) ||
+    !(projectName instanceof Element)
+  ) {
     return;
   }
 
   const pageStyles: SetPageStylesArgs = {
     buttonsGroup,
-    headerOfProject,
-    projectName: !projectName && projectForm ? projectForm : projectName,
+    headerOfProject: headerRoot,
+    projectName:
+      !projectName && projectForm ? projectForm.parentElement : projectName,
   };
 
   setPageStyles(pageStyles);
