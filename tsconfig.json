@@ -17,6 +17,6 @@
     "lib": ["ES2022", "dom"],
     "allowJs": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "tests"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
