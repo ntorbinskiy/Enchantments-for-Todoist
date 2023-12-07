@@ -2,6 +2,7 @@ import activityModule from "./activityModule";
 import projectModule from "./projectModule";
 
 const runApp = (): void => {
+  console.log("da");
   const windowLink = window.location.href;
   const todoistLink = "https://todoist.com/app";
   const todoistAppLink = "https://app.todoist.com/app";

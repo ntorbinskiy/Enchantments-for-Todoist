@@ -25,7 +25,7 @@ export const updateTotalPointsScore = (
 const setTotalPointsParentStyles = (
   totalPointsParent: HTMLDivElement
 ): void => {
-  totalPointsParent.classList.add("total-points-element");
+  addClasses(totalPointsParent, "total-points-element");
   totalPointsParent.id = TOTAL_POINTS_ID;
 };
 
