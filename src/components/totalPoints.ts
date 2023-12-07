@@ -1,3 +1,5 @@
+import { addClasses } from "../helpers/addClasses";
+
 const TOTAL_POINTS_ID = "TOTAL_POINTS_ID";
 const TOTAL_POINTS_SCORE_ID = "TOTAL_POINTS_SCORE_ID";
 
@@ -23,10 +25,7 @@ export const updateTotalPointsScore = (
 const setTotalPointsParentStyles = (
   totalPointsParent: HTMLDivElement
 ): void => {
-  totalPointsParent.style.minWidth = "190px";
-  totalPointsParent.style.justifySelf = "end";
-  totalPointsParent.style.gridColumnStart = "-2";
-  totalPointsParent.style.gridRowStart = "2";
+  totalPointsParent.classList.add("total-points-element");
   totalPointsParent.id = TOTAL_POINTS_ID;
 };
 
@@ -34,18 +33,16 @@ const setTotalPointsElementStyles = (
   totalPointsElement: HTMLDivElement
 ): void => {
   totalPointsElement.textContent = "Total points left for this project: ";
-  totalPointsElement.style.fontFamily = "inherit";
-  totalPointsElement.style.fontSize = "12px";
+
+  addClasses(totalPointsElement, "font-size-12");
 };
 
 const setTotalPointsSpanStyles = (
   totalPointsSpan: HTMLSpanElement,
   totalPoints: number
-) => {
+): void => {
   totalPointsSpan.textContent = `${totalPoints}`;
-  totalPointsSpan.style.fontFamily = "inherit";
-  totalPointsSpan.style.fontSize = "12px";
-  totalPointsSpan.style.fontWeight = "700";
+  addClasses(totalPointsSpan, "score-sum");
   totalPointsSpan.id = TOTAL_POINTS_SCORE_ID;
 };
 

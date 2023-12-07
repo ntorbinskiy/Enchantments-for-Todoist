@@ -1,0 +1,96 @@
+.activity-block {
+  font-size: 11px;
+  font-weight: 500;
+  font-family: inherit;
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+
+.activity-block-span-threshold {
+  left: 64px;
+}
+
+.unknown-estimates-text {
+  color: var(--product-library-priorities-p3-idle-tint) !important;
+}
+
+.unknown-estimates-task-element {
+  position: relative;
+}
+
+.unknown-estimates-task-element::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  background-color: var(
+    --product-library-priorities-p3-disabled-tint
+  ) !important;
+  opacity: 0.5;
+}
+
+.no-points-element {
+  background-color: rgba(246, 193, 4, 0.11);
+}
+
+.no-points-text {
+  color: #bc760d;
+}
+
+.header-of-project {
+  display: grid !important;
+  grid-template-rows: 0fr 2fr;
+  grid-template-columns: auto auto;
+  gap: 21px;
+}
+
+.total-points-element {
+  justify-self: end;
+  grid-row-start: 2;
+  position: relative;
+  top: 8px;
+}
+
+.header-root {
+  display: grid !important;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  justify-content: space-between !important;
+  align-items: start !important;
+}
+
+.buttons-group {
+  grid-column-start: 2;
+  justify-self: end;
+}
+
+.project-name {
+  grid-row-start: 2;
+}
+
+.unknown-estimates-task-buttons {
+  background: none !important;
+}
+
+.link-button {
+  margin-top: -1px;
+}
+
+.font-size-12 {
+  font-size: 12px;
+}
+
+.score-sum {
+  font-weight: 700;
+}
+
+.score-text {
+  font-weight: 400;
+}
+
+.score-parent {
+  display: flex;
+  justify-content: space-between;
+}

@@ -1,28 +1,27 @@
 {
-  "name": "typescript-chrome-extension-webpack-boilerplate",
-  "version": "0.1.0",
-  "description": "typescript-chrome-extension-webpack-boilerplate",
-  "repository": "https://github.com/LimHaksu/",
-  "author": "Lim Haksu",
+  "name": "enchantments-for-todoist",
+  "version": "3.3",
+  "description": "Enchantments for Todoist This extension is going to level up your productivity, by providing some extra features for https://todoist.com/ website",
+  "repository": "https://github.com/ntorbinskiy/Enchantments-for-Todoist/",
+  "author": "Nikita Torbinskiy",
+  "private": true,
   "scripts": {
     "watch": "webpack --config webpack/webpack.dev.js --watch",
-    "build": "webpack --config webpack/webpack.prod.js",
-    "clean": "rimraf dist"
+    "build": "webpack --config webpack/webpack.prod.js && npm-build-zip --source=./dist/ --name=build --name_only=true",
+    "clean": "rimraf dist && rimraf build.zip",
+    "lint": "npx eslint ."
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.133",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
     "copy-webpack-plugin": "^8.0.0",
-    "css-loader": "^5.1.2",
+    "eslint": "^8.51.0",
     "file-loader": "^6.2.0",
-    "node-sass": "^5.0.0",
+    "npm-build-zip": "^1.0.4",
     "rimraf": "^3.0.2",
-    "sass": "^1.32.8",
-    "sass-loader": "^11.0.1",
-    "style-loader": "^2.0.0",
     "ts-loader": "^8.0.18",
-    "typescript": "^4.2.3",
+    "typescript": "^5.2.2",
     "webpack": "^5.25.0",
-    "webpack-cli": "^4.5.0",
-    "webpack-merge": "^5.7.3"
+    "webpack-cli": "^4.5.0"
   }
 }

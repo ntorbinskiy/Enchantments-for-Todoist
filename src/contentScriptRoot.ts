@@ -7,7 +7,7 @@ const bootstrapApp = (): void => {
 };
 
 const interval = setInterval(() => {
-  const homeButton = document.querySelector("button.home_btn");
+  const homeButton = document.querySelector(".app-sidebar-container");
   if (homeButton) {
     bootstrapApp();
     clearInterval(interval);

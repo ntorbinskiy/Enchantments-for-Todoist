@@ -1,11 +1,12 @@
 {
   "name": "Enchantments for Todoist",
   "description": "Enchantments for Todoist",
-  "version": "2.1",
+  "version": "3.3",
   "content_scripts": [
     {
-      "matches": ["https://todoist.com/app/*"],
+      "matches": ["https://todoist.com/app/*", "https://app.todoist.com/app/*"],
       "runat": "documet-idle",
+      "css": ["./css/styles.css"],
       "js": ["contentScript.js"]
     }
   ],

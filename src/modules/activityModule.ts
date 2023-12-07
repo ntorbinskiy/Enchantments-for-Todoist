@@ -4,74 +4,49 @@ import {
   findScoreBlockElement,
   updateScore,
 } from "../components/scoreBlock";
+import { findUnknownEstimatesElement } from "../components/unknownEstimates/unknownEstimates";
+import { createUnknownEstimatesActivity } from "../components/unknownEstimates/unknownEstimatesActivity";
+import { getTasksScoreNumber, tryGetItemScore } from "../core/taskUtils";
+import { ItemScoreTypes, Task } from "../core/types";
+import { isDefined } from "../helpers/isDefined";
 import nodeToArray from "../helpers/nodeToArray";
 
-const isTaskCompleted = (svgPath: string): boolean => {
-  const completedImagePath = "sm1/notification_completed.svg";
+const assignedImagePath = "sm1/notification_assigned.svg";
+const completedImagePath = "sm1/notification_completed.svg";
 
-  return svgPath === completedImagePath;
-};
-
-const getItemScore = (name: string, regex: RegExp): number | undefined => {
-  const scoreText =
-    name.replaceAll("\n", " ").match(regex)?.groups?.["score"] ?? "";
-
-  return parseInt(scoreText) || undefined;
-};
-
-const getTasksScores = (
-  childNodes: NodeListOf<ChildNode>,
-  regexForScoreAndPoints: RegExp
-): number | undefined => {
-  const taskChildNodes = nodeToArray(childNodes);
-  if (taskChildNodes instanceof Element) {
-    return;
+const mapElementToTask = (taskElement: ChildNode): Task | undefined => {
+  if (!(taskElement instanceof HTMLElement)) {
+    return undefined;
   }
 
-  return taskChildNodes
-    .map((taskChildNode) => {
-      if (!(taskChildNode instanceof HTMLElement)) {
-        return;
-      }
+  const name = taskElement.querySelector("div.task_content")?.textContent;
 
-      const svgPathOfItemChildNode =
-        taskChildNode.querySelector("svg")?.dataset.svgsPath ?? "";
-
-      if (isTaskCompleted(svgPathOfItemChildNode)) {
-        const itemScore = getItemScore(
-          taskChildNode.innerText,
-          regexForScoreAndPoints
-        );
-
-        return itemScore ?? 0;
-      }
-
-      return 0;
-    })
-    .reduce((accumulator, currentValue) => accumulator! + currentValue!, 0);
-};
-
-const mapTasks = (
-  tasks: Element[] | ChildNode[],
-  regexForScoreAndPoints: RegExp
-): (number | undefined)[] => {
-  return tasks.map((task) =>
-    getTasksScores(task.childNodes, regexForScoreAndPoints)
-  );
-};
-
-const postCounterToPage = (
-  points: number,
-  indexOfParent: number,
-  parent: HTMLCollectionOf<Element>
-): void => {
-  const parentNode = parent[indexOfParent];
-
-  if (!parentNode) {
-    return;
+  if (!name) {
+    return undefined;
   }
 
-  const scoreBlockParent = parentNode.querySelector("h2");
+  const svgPath = taskElement.querySelector("svg")?.dataset.svgsPath ?? "";
+
+  return {
+    name,
+    isAssigned: svgPath === assignedImagePath,
+    isCompleted: svgPath === completedImagePath,
+    score: tryGetItemScore(name),
+    containsModalDialog: false,
+  };
+};
+
+const mapNodesToTasks = (
+  childNodes: NodeListOf<ChildNode>
+): readonly Task[] => {
+  return nodeToArray(childNodes)
+    .map(mapElementToTask)
+    .filter(isDefined)
+    .filter((task) => task.isCompleted);
+};
+
+const postCounterToPage = (points: number, sectionElement: Element): void => {
+  const scoreBlockParent = sectionElement.querySelector("h2");
 
   if (!scoreBlockParent) {
     return;
@@ -89,76 +64,58 @@ const postCounterToPage = (
   updateScore(scoreBlockParent, points);
 };
 
-const isTaskCorrect = (regexForScoreAndPoints: RegExp) => {
-  const taskIcons = nodeToArray(
-    document.getElementsByClassName("avatar_event_icon")
-  );
-
-  if (taskIcons instanceof Element) {
+const updateTaskLabel = (taskElement: HTMLElement, task: Task): void => {
+  if (!task.isAssigned && !task.isCompleted) {
     return;
   }
 
-  taskIcons.map((taskIcon) => {
+  const taskText = taskElement.querySelector(".text");
+
+  if (task.isAssigned) {
+    const unknownEstimatesElement = findUnknownEstimatesElement(taskElement);
     if (
-      !taskIcon.parentElement ||
-      !(taskIcon instanceof HTMLElement) ||
-      !taskIcon.parentElement.parentElement
+      !unknownEstimatesElement &&
+      task.score.type === ItemScoreTypes.Unassigned
     ) {
-      return;
+      const unknownEstimates = createUnknownEstimatesActivity(
+        taskElement,
+        task.name
+      );
+
+      taskText?.after(unknownEstimates);
     }
+  }
 
-    const taskItem = taskIcon.parentElement.parentElement;
-    const taskNameItem = taskItem.querySelector(".task_content");
-    const taskTime = taskItem.querySelector("span.activity_time");
-    const taskText = taskItem.querySelector(".text");
+  if (task.isCompleted) {
+    const noPointsElement = findNoPointsElement(taskElement);
+    if (!noPointsElement && task.score.type === ItemScoreTypes.Undefined) {
+      const noPoints = createNoPoints(taskElement, task.name);
 
-    const svgIcon = taskIcon.querySelector("svg");
-
-    if (!svgIcon || !taskNameItem || !taskTime || !taskText) {
-      return;
+      taskText?.after(noPoints);
     }
-
-    const svgPath = svgIcon.dataset.svgsPath ?? "";
-
-    if (!isTaskCompleted(svgPath)) {
-      return;
-    }
-
-    const taskName = taskNameItem.textContent ?? "";
-
-    const score = getItemScore(taskName, regexForScoreAndPoints);
-
-    const noPointsElement = findNoPointsElement(taskItem);
-
-    if (!noPointsElement && score === undefined) {
-      const noPointsOptions = {
-        taskItem,
-        taskTime,
-        taskName,
-      };
-
-      const noPoints = createNoPoints(noPointsOptions);
-
-      taskText.after(noPoints);
-    }
-  });
+  }
 };
 
 const activityModule = (): void => {
   const sectionsOfTasks = document.getElementsByClassName("section");
-  const tasks = nodeToArray(document.querySelectorAll("ul.items"));
 
-  const regexForScoreAndPoints = /^.*\[(?<score>\d+)\]\s*.*$/;
+  Array.from(sectionsOfTasks).forEach((section) => {
+    const tasksNodes = section.querySelectorAll("li.event");
 
-  mapTasks(tasks, regexForScoreAndPoints).map((points, index) => {
-    if (!points && points !== 0) {
-      return;
-    }
+    const sectionScoreNumber = getTasksScoreNumber(mapNodesToTasks(tasksNodes));
 
-    return postCounterToPage(points, index, sectionsOfTasks);
+    postCounterToPage(sectionScoreNumber, section);
+
+    Array.from(tasksNodes).forEach((taskNode) => {
+      const taskItem = mapElementToTask(taskNode);
+
+      if (!taskItem || !(taskNode instanceof HTMLElement)) {
+        return;
+      }
+
+      updateTaskLabel(taskNode, taskItem);
+    });
   });
-
-  isTaskCorrect(regexForScoreAndPoints);
 };
 
 export default activityModule;
